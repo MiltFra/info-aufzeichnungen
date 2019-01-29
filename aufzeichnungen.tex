@@ -159,8 +159,8 @@ Dabei muss $f$ total und berechenbar sein.\\
                       Solange $f(n) \not= w$, inkrementiere $n$
                 \item $M$ ist semi-entscheidbar \Rightarrow $M$ ist rekursiv aufzählbar:\\
                       Zähle alle $w$ aus $A*$ auf und gibt diejenigen zurück, für die $\chi_M(x) = 1$ ist.
+                      \qedhere
             \end{enumerate}
-            \qedhere
         \end{proof}
     \end{RaSe}
 \end{framed}
@@ -206,9 +206,9 @@ F\"ur eine $n$-stellige Eingabe gibt es eine Ausgabe, wahr oder falsch.
     \end{Goedel}
 \end{framed}
 \begin{framed}
-    \newtheorem*{MehrProbleme}{Satz} 
+    \newtheorem*{MehrProbleme}{Satz}
     \begin{MehrProbleme}
-        Es gibt mehr Probleme als Algorithmen. 
+        Es gibt mehr Probleme als Algorithmen.
         \begin{proof}
             Was ist ein Algorithmus? Eine Turingmaschine. Über Gödelisierung wird klar, dass sich jede Turingmaschine als natürliche Zahl darstellen lässt. Somit ist die Menge der Turingmaschinene abzählbar.\\
             Was ist ein Problem? Eine $n$-stellige Wortfunktion. Jene Worte können aus einer beliebigen Menge bzw. Sprache stammen. Wir wählen die Menge der reellen Zahlen $\mathbb{R}$. Mit Hilfe der Cantor-Diagonalisierung können wir zeigen, dass $\mathbb{R}$ überabzählbar ist. Somit gibt es mehr Worte und damit auch mehr Wortfunktionen als Algorithmen.
@@ -223,9 +223,9 @@ $f: A* \rightarrow A*$ heißt turingberechenbar genau dann, wenn eine Turingmasc
     f(w_1)=w_2\Leftrightarrow \left[TM-z_0,w_1\right]\rightarrow \left[TM-z_1,w_2\right]
 \end{equation}
 \begin{framed}
-    \newtheorem*{Church}{Churche These}  
+    \newtheorem*{Church}{Churche These}
     \begin{Church}
-        Jede im intuitiven Sinn berechenbare Funktion ist auch turingberechenbar. 
+        Jede im intuitiven Sinn berechenbare Funktion ist auch turingberechenbar.
     \end{Church}
 \end{framed}
 \subsection{Die Rad\'o-Funktion}
@@ -233,7 +233,7 @@ Die Rado-Funktion $\Sigma(n)$ gibt zur\"uck, wie viele Zeichen eine terminierend
 \\
 Dabei ist $\Sigma(6) > 3.5 \cdot 10^{18267}$.
 
-\subsection{Ermittlung des Fleißigen Biebers}
+\subsubsection{Ermittlung des Fleißigen Biebers}
 
 Alle Kandidaten können aufgezählt werden.
 \begin{itemize}
@@ -241,6 +241,39 @@ Alle Kandidaten können aufgezählt werden.
     \item Außerdem gibt es $2\cdot2\cdot n$ mögliche Reaktionen (Zwei Zeichen $\cdot$ Zwei Bewegungen $\cdot n$ Reaktionen)
     \item somit gibt es für $n$ Zustände $(4n)^{2n}$ Kandidaten. Die probiert man aus...
 \end{itemize}
+\subsubsection{Unberechenbarkeit der Rad\'o-Funktion}
+\begin{framed}
+    \newtheorem*{rado}{Satz}
+    \begin{rado}
+        Die Funktion $\Sigma$ ist nicht berechenbar.
+
+        \begin{proof}
+            Wir zeigen, dass $\Sigma$ schneller wächst als jede berechenbare Funktion $f$.\\
+            Dazu brauchen wir drei Turingmaschinen:
+            \begin{itemize}
+                \item $M_N$ druckt $n$ Striche auf ein leeres Band, weniger als $n$ zustände.
+                \item $M_D$ verdoppelt die Anzahl der Striche auf dem Band, hat $c$ Zustände.
+                \item $M_F$ berechnet $f$ mit $p$ Zuständen.
+            \end{itemize}
+            Wir verknüpfen: $M_N | M_D | M_F$ \\
+            \Rightarrow $f(2n)$ Striche mit $p+n+c$ Zuständen.\\
+            lt. Definition ist $\Sigma(p+n+c)$ mindestens so groß wie $f(2n)$, weil mit $p+n+c$ Zuständen nun $f(2n)$ Striche auf das Band gemalt werden können.\\
+            \Rightarrow $\Sigma(n+p+c) \geq f(2n)$\\
+            mit $n\rightarrow\infty$: $n>p+c$\\$\Rightarrow\Sigma(2n) > \Sigma(p+n+c)\geq f(2n)$\\
+                \Rightarrow $\Sigma(2n)>f(2n)$\qedhere
+        \end{proof}
+    \end{rado}
+\end{framed}
+\subsection{Satz von Rice}
+\newtheorem*{rice}{Satz von Rice}
+\begin{framed}
+    \begin{rice}
+        Es gibt keinen Algorithmus, der in der Lage ist zu entscheiden, ob eine beliebige Turingmaschine (bzw. Funktion) eine nicht triviale Eigneschaft hat, oder nicht. 
+    \end{rice} 
+\end{framed}
+Dabei ist eine triviale Eigenschaft solch eine, die entweder Teil aller Turingmaschinen ist oder gar keiner.\\
+\\
+Somit ist es unmöglich die simpelsten Eigenschaften allgemein für alle Programme zu bestimmen.
 \section{Praktisch Unberechenbares}
 \begin{quote}
     \emph{
