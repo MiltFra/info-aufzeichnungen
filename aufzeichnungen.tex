@@ -228,6 +228,19 @@ $f: A* \rightarrow A*$ heißt turingberechenbar genau dann, wenn eine Turingmasc
         Jede im intuitiven Sinn berechenbare Funktion ist auch turingberechenbar. 
     \end{Church}
 \end{framed}
+\subsection{Die Rad\'o-Funktion}
+Die Rado-Funktion $\Sigma(n)$ gibt zur\"uck, wie viele Zeichen eine terminierende Turingmaschine mit $n$ Zuständen auf ein anfangs leeres Band schreiben kann. Dabei verfügt die Maschine nur über ein binäres Alphabet $\{0, 1\}$ und das leere Zeichen ist $0$. Die Turingmaschine, die mit $n$ Zuständen $\Sigma(n)$ Zeichen schreibt heißt fleißiger Bieber (engl. \emph{busy beaver}).\\
+\\
+Dabei ist $\Sigma(6) > 3.5 \cdot 10^{18267}$.
+
+\subsection{Ermittlung des Fleißigen Biebers}
+
+Alle Kandidaten können aufgezählt werden.
+\begin{itemize}
+    \item beim binären Alphabet gibt es $2n$ mögliche Konstellationen, da in $n$ Zuständen zwei Zeichen gelesen werden können.
+    \item Außerdem gibt es $2\cdot2\cdot n$ mögliche Reaktionen (Zwei Zeichen $\cdot$ Zwei Bewegungen $\cdot n$ Reaktionen)
+    \item somit gibt es für $n$ Zustände $(4n)^{2n}$ Kandidaten. Die probiert man aus...
+\end{itemize}
 \section{Praktisch Unberechenbares}
 \begin{quote}
     \emph{
