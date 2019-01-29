@@ -1,0 +1,280 @@
+\documentclass{article}
+\usepackage[a4paper]{geometry}
+\geometry{lmargin=2cm, rmargin=1.5cm}
+\usepackage[ngerman]{babel}
+\usepackage{dirtytalk}
+% Formatierungen
+\usepackage[a4paper]{geometry}
+\usepackage{fontspec}
+\setmainfont{Ubuntu}
+\usepackage[font=tiny, labelfont=bf]{caption}
+\usepackage{hyperref}
+\hypersetup{
+	colorlinks,
+	citecolor=black,
+	filecolor=black,
+	linkcolor=black,
+	urlcolor=black
+}
+\widowpenalty10000
+\clubpenalty10000
+% Header / Footer
+\usepackage{fancyhdr}
+\usepackage{datetime}
+\usepackage{lastpage}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\rightmark}
+\rhead{\thepage}
+% Table of contents
+\usepackage{tocloft}
+
+\cftsetindents{section}{0em}{6em}
+\cftsetindents{subsection}{1em}{5em}
+\cftsetindents{subsubsection}{2em}{4em}
+
+\renewcommand\cfttoctitlefont{\hfill\Large\bfseries}
+\renewcommand\cftaftertoctitle{\hfill\mbox{}}
+
+\setcounter{tocdepth}{3}
+
+% Math
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{array}
+\usepackage{todonotes}
+
+% Unterpunkt Stufe 4
+\usepackage{titlesec}
+	
+\setcounter{secnumdepth}{4}
+	
+\titleformat{\paragraph}
+{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
+\titlespacing*{\paragraph}
+{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+
+% Python Code
+% Default fixed font does not support bold face
+\DeclareFixedFont{\ttb}{T1}{txtt}{bx}{n}{10} % for bold
+\DeclareFixedFont{\ttm}{T1}{txtt}{m}{n}{10}  % for normal
+
+% Custom colors
+\usepackage{color}
+\definecolor{deepblue}{rgb}{0,0,0.5}
+\definecolor{deepred}{rgb}{0.6,0,0}
+\definecolor{deepgreen}{rgb}{0,0.5,0}
+
+\usepackage{listings}
+
+% Python style for highlighting
+\newcommand\pythonstyle{\lstset{
+language=Python,
+basicstyle=\ttm,
+otherkeywords={self},             % Add keywords here
+keywordstyle=\ttb\color{deepblue},
+emph={MyClass,__init__},          % Custom highlighting
+emphstyle=\ttb\color{deepred},    % Custom highlighting style
+stringstyle=\color{deepgreen},
+frame=tb,                         % Any extra options here
+showstringspaces=false            % 
+}}
+
+
+% Python environment
+\lstnewenvironment{python}[1][]
+{
+\pythonstyle
+\lstset{#1}
+}
+{}
+
+% Python for external files
+\newcommand\pythonexternal[2][]{{
+\pythonstyle
+\lstinputlisting[#1]{#2}}}
+
+% Python for inline
+\newcommand\pythoninline[1]{{\pythonstyle\lstinline!#1!}}
+\usepackage{csquotes}
+\usepackage{framed}
+\linespread{1.2}
+\begin{document}
+\begin{titlepage}
+    \begin{center}
+        \Huge Abiturvorbereitung Informatik
+    \end{center}
+\end{titlepage}
+\tableofcontents
+\pagebreak
+\section{Sprachen \& Automaten}
+\subsection{Automaten}
+\subsection{Sprachen}
+\subsection{Grenzen}
+\section{Berechenbarkeitstheorie}
+\subsection{Entscheidbarkeit}
+Eine Sprache $L$ ist entscheidbar genau dann, wenn die charakteristische Funktion $\chi$ berechenbar ist.
+\begin{equation}
+    \chi _L(x)=
+    \begin{cases}
+        1, & \text{wenn } x\in L     \\
+        0, & \text{wenn } x\not\in L
+    \end{cases}
+\end{equation}
+\subsection{Semi-Entscheidbarkeit}
+Eine Sprache $L$ ist entscheidbar genau dann, wenn die partielle charakteristische Funktion $\chi$ berechenbar ist.
+\begin{equation}
+    \chi _L(x)=
+    \begin{cases}
+        1,                  & \text{wenn } x\in L \\
+        \text{undefiniert}, & \text{sonst}
+    \end{cases}
+\end{equation}
+bzw.
+\begin{equation}
+    \chi _L(x)=
+    \begin{cases}
+        0,                  & \text{wenn } x\not\in L \\
+        \text{undefiniert}, & \text{sonst}
+    \end{cases}
+\end{equation}
+\subsection{Berechenbarkeit}
+Ein Problem ist berechenbar, genau dann wenn ein Algorithmus zur Lösung des Problems existiert.
+\subsection{Rekursive Aufzählbarkeit}
+\Rightarrow NICHT Abzählbarkeit!\\\\
+Menge $M$ aus $A*$ heißt rekursiv aufzählbar, genau dann wenn
+\begin{equation}
+    |M|=0 \vee f:\mathbb{N}\rightarrow A* \wedge M=\{f(0), f(1),...\}
+\end{equation}
+Dabei muss $f$ total und berechenbar sein.\\
+\newtheorem*{RaSe}{Satz}
+\begin{framed}
+    \begin{RaSe}
+        $M$ ist semi-entscheidbar genau dann, wenn $M$ rekursiv aufzählbar ist.
+        \begin{proof}
+            Zweiteilig:
+            \begin{enumerate}
+                \item $M$ ist rekursiv aufzählbar \Rightarrow $M$ ist semi-entscheidbar:\\
+                      Solange $f(n) \not= w$, inkrementiere $n$
+                \item $M$ ist semi-entscheidbar \Rightarrow $M$ ist rekursiv aufzählbar:\\
+                      Zähle alle $w$ aus $A*$ auf und gibt diejenigen zurück, für die $\chi_M(x) = 1$ ist.
+            \end{enumerate}
+            \qedhere
+        \end{proof}
+    \end{RaSe}
+\end{framed}
+\subsection{Das Wortproblem}
+\Rightarrow $W\in L(G)$?\\\\
+\begin{tabular}{l | l}
+    Zu erkennende Sprache       & Erkennender Automat               \\\hline
+    endliche Sprache            & Zyklenfreier endlicher Automat    \\
+    Typ-3-Sprache               & EA (Endlicher Automat)            \\
+    Typ-2-Sprache               & PDA (Kellerautomat)               \\
+    Typ-1-Sprache               & LBA (linear beschränkter Automat) \\
+    Turingentscheidbare Sprache & TM (Turingmaschine)               \\\hline
+    Typ-0-Sprache               & nicht allg. entscheidbar
+\end{tabular}
+\begin{framed}
+\newtheorem*{Typ-1-Entscheidbarkeit}{Satz}
+\begin{Typ-1-Entscheidbarkeit}
+Typ-1-Sprachen sind entscheidbar.
+\begin{proof}
+    Ansatz: Längenmonotonie\\
+    Verfolge alle Pfade der Bildungsvorschriften solange, bis der Ausdurck länger ist als das Wort. Entweder das Wort wird dabei gefunden oder es ist nicht in der Sprache enthalten. \qedhere
+\end{proof}
+\end{Typ-1-Entscheidbarkeit}
+\end{framed}
+\subsection{Probleme}
+\subsubsection{Allgemein}
+Eine $n$-stellige Wortfunktion:
+\begin{equation}
+    f: \left(A*\right)^n \rightarrow A*; \: n \in \mathbb{N}
+\end{equation}
+F\"ur eine $n$-stellige Eingabe gibt es eine Ausgabe.
+\subsubsection{Entscheidungsproblem}
+Eine $n$-stellige Wortfunktion:
+\begin{equation}
+    f: \left(A*\right)^n \rightarrow\{0, 1\}
+\end{equation}
+F\"ur eine $n$-stellige Eingabe gibt es eine Ausgabe, wahr oder falsch.
+\subsubsection{Wieviele Probleme gibt es?}
+\begin{framed}
+    \newtheorem*{Goedel}{Gödel'scher Unvollständigkeitssatz}
+    \begin{Goedel}
+        In jedem widerspruchsfreien Axiomensystem gibt es Sätze, die nicht mit den Mitteln dieses Systems bewiesen werden können. (Kurt Gödel)
+    \end{Goedel}
+\end{framed}
+\begin{framed}
+    \newtheorem*{MehrProbleme}{Satz} 
+    \begin{MehrProbleme}
+        Es gibt mehr Probleme als Algorithmen. 
+        \begin{proof}
+            Was ist ein Algorithmus? Eine Turingmaschine. Über Gödelisierung wird klar, dass sich jede Turingmaschine als natürliche Zahl darstellen lässt. Somit ist die Menge der Turingmaschinene abzählbar.\\
+            Was ist ein Problem? Eine $n$-stellige Wortfunktion. Jene Worte können aus einer beliebigen Menge bzw. Sprache stammen. Wir wählen die Menge der reellen Zahlen $\mathbb{R}$. Mit Hilfe der Cantor-Diagonalisierung können wir zeigen, dass $\mathbb{R}$ überabzählbar ist. Somit gibt es mehr Worte und damit auch mehr Wortfunktionen als Algorithmen.
+            \qedhere
+        \end{proof}
+    \end{MehrProbleme}
+\end{framed}
+\subsection{Turingberechenbarkeit}
+s. Turingmaschine\\\\
+$f: A* \rightarrow A*$ heißt turingberechenbar genau dann, wenn eine Turingmaschine $TM$ existiert, sodass für alle $w_1, w_2$ aus $A*$ gilt:
+\begin{equation}
+    f(w_1)=w_2\Leftrightarrow \left[TM-z_0,w_1\right]\rightarrow \left[TM-z_1,w_2\right]
+\end{equation}
+\begin{framed}
+    \newtheorem*{Church}{Churche These}  
+    \begin{Church}
+        Jede im intuitiven Sinn berechenbare Funktion ist auch turingberechenbar. 
+    \end{Church}
+\end{framed}
+\section{Praktisch Unberechenbares}
+\begin{quote}
+    \emph{
+        Berechenbarkeit ist nur praktikabel, wenn weniger Bits als Atome im Universum und weniger Rechenzeit als die Lebensdauer der Sonne erforderlich sind.
+    }
+\end{quote}
+\Rightarrow Exponentiell w\"achst zu schnell!
+\paragraph*{Rechenzeit:}
+Entspricht der Anzahl der benötigten Rechenschritte (Operationen mit konstanter Dauer)
+\begin{itemize}
+    \item Worst-Case: Maximum aller Rechenzeiten für denkbare Eingaben
+    \item Average-Case: Erwartungswert der Rechenzeit
+\end{itemize}
+
+
+\subsection{Die Klassen P und NP}
+\paragraph*{Klasse:}
+Menge mit Zugehörigkeitskriterium.
+\subsubsection{[P]olynomiell Berechenbares}
+Existiert ein Algorithmus \emph{zur Lösung des Problems}, dessen Worst-Case-Laufzeit durch ein Polynom über der Problemgröße abschätzbar ist?
+\paragraph*{Robustheit von P:}
+Unabhängig von Rechnermodell variantenstabil:\\
+$\Rightarrow$ Zahlprobleme (ZP), Entscheidungsprobleme (EP), Optimierungsprobleme (OP)\\\\
+\begin{tabular}{l | l}
+    Umwandlung          & Rechenzeit  \\ \hline
+    ZP $\rightarrow$ EP & $O(1)$      \\
+    EP $\rightarrow$ ZP & $O(log(N))$ \\
+    ZP $\rightarrow$ OP & $O(N)$
+\end{tabular}
+\paragraph*{Beispiele}
+\begin{itemize}
+    \item $\in P$:
+          \begin{itemize}
+              \item Sortierprobleme
+              \item Kürzeste Wege
+          \end{itemize}
+    \item $\notin P$:
+          \begin{itemize}
+              \item Ackermann-P\'eter-Funktion
+          \end{itemize}
+\end{itemize}
+\subsubsection{[N]ichtdeterministisch [P]olynomiell Berechenbares}
+Existiert ein Algorithmus \emph{zur Überprüfung einer potentiellen Lösung}, dessen Worst-Case-Laufzeit durch ein Polynom über der Problemgröße abschätzbar ist?
+\paragraph*{Beispiele}
+\begin{itemize}
+    \item Hamilton-Pfad
+\end{itemize}
+\paragraph*{MERKE:}
+$P \subseteq NP \Rightarrow P = NP\not\equiv P \subset NP$
+\end{document}
