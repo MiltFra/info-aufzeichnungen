@@ -108,8 +108,40 @@ showstringspaces=false            %
 \end{titlepage}
 \tableofcontents
 \pagebreak
+\section{Datenbanken}
+\section{Datenstrukturen}
+\subsection{Schlangen}
+\subsection{Stapel}
+\subsection{Listen}
+\subsection{Bäume}
+\subsubsection{Grundbegriffe}
+\subsubsection{Binärbäume}
+\subsubsection{Suchbäume}
+\subsection{Warteschlangen}
+\subsection{Graphen}
+\section{Technische Grundlagen}
+\subsection{Grundbegriffe}
+Bool'sche Algebra, Schaltalgebra, Aussage, Atome, Junktoren, Zweiwertigkeit, Extensionabilität, Kontraposition, Kettenschluss, DeMorgan'sche Regeln, Wahrheitstabellen
+\subsection{Bool'sche Funktionen}
+\subsubsection{Vereinfachungen}
+\paragraph{Karnough-Veitch}
+\paragraph{Quine-McCluskey}
+\subsection{Addierer}
+\subsubsection{Halbaddierer}
+\subsubsection{Volladdierer}
+\subsubsection{Paralleladdierer}
+\subsubsection{Serienaddierwerk}
+\subsection{Flip-Flops}
+\subsubsection{RS-Flip-Flop}
+\subsubsection{D-Flip-Flop}
+\subsubsection{MS-JK-Flip-Flop}
 \section{Sprachen \& Automaten}
 \subsection{Automaten}
+\subsubsection{Arten}
+\subsubsection{Endliche Automaten (EA)}
+\subsubsection{Kellerautomaten (PDA)}
+\subsubsection{Linear beschränkte Automaten (LBA)}
+\subsubsection{Turingmaschinen (TM)}
 \subsection{Sprachen}
 \subsection{Grenzen}
 \section{Berechenbarkeitstheorie}
@@ -323,4 +355,20 @@ Existiert ein Algorithmus \emph{zur Überprüfung einer potentiellen Lösung}, d
 \end{itemize}
 \paragraph*{MERKE:}
 $P \subseteq NP \Rightarrow P = NP\not\equiv P \subset NP$
+\subsection{Hamilton (Pfad/Kreis)}
+Existiert in einem gegebenen Graphen einen Pfad/Kreis, der jeden Knoten genau ein mal enthält (und dabei keine Kante doppelt verwendet)?
+\newtheorem*{hamiltonnp}{Satz}
+\begin{framed}
+    \begin{hamiltonnp}
+        Das Finden eines Hamilton-Kreises bzw. eines Hamilton-Pfades ist ein Problem aus NP. 
+        \begin{proof}
+            Lösungen lassen sich in polynomialzeit Überprüfen indem nacheinander jeder Knoten des Pfades besucht wird. Sollte zwischen zwei in der Lösung aufeinanderfolgenden Knoten keine Kante existieren, so ist die Lösung ungültig. Im Falle des Hamilton-Kreises muss natürlich überprüft werden, ob eine Kante vom letzten zum ersten Knoten existiert.\\
+            Das besuchen aller Knoten wächst linear mit der Anzahl der Knoten, somit erfolgt die Überprüfung in $O(N)$.
+        \end{proof}
+    \end{hamiltonnp}
+\end{framed}
+\subsection{Die Klasse NPC}
+\subsection{Graphf\"arbung}
+Weise Knoten eines Graphen Farben zu, sodass keine zwei benachbarten Knoten die gleiche Farbe haben.
+
 \end{document}
