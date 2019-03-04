@@ -370,6 +370,57 @@ Existiert in einem gegebenen Graphen einen Pfad/Kreis, der jeden Knoten genau ei
 \subsection{Die Klasse NPC}
 \subsection{Graphf\"arbung}
 Weise Knoten eines Graphen Farben zu, sodass keine zwei benachbarten Knoten die gleiche Farbe haben.
+Frage: $P = NP$ oder $P \subset NP$?
+\subsubsection{NP-Vollständigkeitstheorie}
+Man nehme das schwerste Problem aus $NP$ und versuche es in $P$-Zeit zu lösen.\\
+Entweder das funktioniert, dann ist $P = NP$, oder das funktioniert nicht, dann ist $P \subset NP$.
+\subsubsection{Was sind die schwersten NP-Probleme?}
+\begin{itemize}
+    \item Lösung beinhaltet Lösung aller Probleme in $NP$.
+    \item Lösung aller anderer Probleme in $NP$ kann in $P$-Zeit auf die Lösung der $NPC$-Probleme zurückgeführt werden.
+\end{itemize}
+\subsubsection{Definition}
+Menge aller Probleme aus $NP$, auf die alle Probleme aus $NP$ in $P$-Zeit zurückführbar sind.
+\begin{framed}
+    \newtheorem*{allenpc}{Merke}
+    \begin{allenpc}
+        Alle Probleme aus $NPC$ sind in $P$-Zeit aufeinander rückführbar und somit gleich schwer. 
+    \end{allenpc}
+\end{framed}
+\subsubsection{Erfüllbarkeitsproblem (SAT)}
+Für einen bool'schen Term $T$ ist eine Variablenbelegung $B$ zu finden, die dazu führt, dass $T$ wahr wird. Dabei sind Terme in disjunktiver Normalform trivial und meistens nicht interessant.
+
+\subsubsection{Travelling Salesman Problem (TSP)}
+Es ist ein möglichst kurzer Hamilton-Kreis in einem gegebenen Graphen zu finden. Dabei kann entweder das Entscheidungsproblem gemeint sein, wobei gefragt wird ob ein Hamilton-Kreis existiert, der die Länge $x$ nicht überschreitet, oder es geht um das Optimierungsproblem, wobei es den kürzesten Hamilton-Kreis zu finden gilt.
+\paragraph*{Lösungsansätze}
+\begin{itemize}
+    \item Durchlaufen aller Permuationen
+    \item Dynamisch
+    \item Branch and Bound
+\end{itemize}
+\paragraph*{Anwendungen}
+\begin{itemize}
+    \item Routenplanung
+    \item Finden von Superpermutationen
+    \item Lochkartenautomaten
+\end{itemize}
+\subsubsection{Färbungsproblem (COL)}
+Es ist eine Belegung der Knoten eines Graphen mit sogenannten Farben, d.h. Werten, zu finden, die sicherstellt, dass keine zwei benachbarten Knoten die gleiche Färbung haben. \\
+\indent Dabei ist beim Entscheidungsproblem die Frage zu beantworten, ob eine Färbung mit $x$ Farben existiert. Beim Optimierungsproblem hingegen ist eine der Färbungen zu finden, die die wenigsten Farben enthalten.
+\paragraph*{Anwendung}
+\begin{itemize}
+    \item Mobilfunknetze
+    \item Landkarten
+    \item Zeitplanung
+\end{itemize}
+\subsubsection{Cliquenproblem (CLIQUE)}
+Es ist eine möglichst große Menge an Knoten zu finden in der alle Elemente paarweise durch direkte Kanten miteinander verbunden sind. Dabei kann entweder das Entscheidungsproblem gemeint sein, wobei gefragt wird ob eine Clique der Größe $x$ existiert oder das Optimierungsproblem, wobei es die größte Clique zu finden gilt.\\
+\indent Dabei sind nicht zwingend alle Variationen in $NPC$, da sich beispielsweise alle potentiellen Cliquen der Größe $x$ in $O(\frac{N!}{(N-x)!})\approx O(N^x)$, also in $P$-Zeit überprüfen lassen.
+\paragraph*{Anwendung}
+\begin{itemize}
+    \item Zimmerbelegung
+\end{itemize}
+
 \section{Nebenläufige Prozesse}
 \subsection{Petri-Netze}
 \begin{align}
@@ -380,5 +431,4 @@ Weise Knoten eines Graphen Farben zu, sodass keine zwei benachbarten Knoten die 
     F &\:\subseteq (P \times T) \cup (T \times P) &\:\text{(Flussrelation)}\\
     W\:&:F\rightarrow \mathbb{N}
 \end{align}
-
 \end{document}
