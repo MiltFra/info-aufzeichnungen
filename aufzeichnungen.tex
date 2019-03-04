@@ -370,5 +370,15 @@ Existiert in einem gegebenen Graphen einen Pfad/Kreis, der jeden Knoten genau ei
 \subsection{Die Klasse NPC}
 \subsection{Graphf\"arbung}
 Weise Knoten eines Graphen Farben zu, sodass keine zwei benachbarten Knoten die gleiche Farbe haben.
+\section{Nebenläufige Prozesse}
+\subsection{Petri-Netze}
+\begin{align}
+    N &\:= (P, T, F, W, m_0) &\: \text{(Petri-Netz)}\\
+    P &\:\cap T = \emptyset &\: \text{(Disjunktheit)}\\
+    |P| &\:> 0 &\:\text{(endl. Menge an Stellen)}\\
+    |T| &\:> 0 &\:\text{(endl. Menge an Transitionen)}    \\
+    F &\:\subseteq (P \times T) \cup (T \times P) &\:\text{(Flussrelation)}\\
+    W\:&:F\rightarrow \mathbb{N}
+\end{align}
 
 \end{document}
