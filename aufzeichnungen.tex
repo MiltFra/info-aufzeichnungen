@@ -81,6 +81,11 @@ frame=tb,                         % Any extra options here
 showstringspaces=false            % 
 }}
 
+\lstset { %
+    language=C++,
+    backgroundcolor=\color{black!5}, % set backgroundcolor
+    basicstyle=\footnotesize\ttfamily,
+}
 
 % Python environment
 \lstnewenvironment{python}[1][]
@@ -110,12 +115,42 @@ showstringspaces=false            %
 \pagebreak
 \section{Datenbanken}
 \section{Datenstrukturen}
+Eine Datenstruktur ist ein Objekt zur Speicherung und Organisation von Daten. Dabei sind Daten immer so angeordnent, dass sie effizient, in Bezug auf Zeit und Speicher, für eine bestimmte Aufgabe genutzt werden können.
 \subsection{Schlangen}
 \subsection{Stapel}
 \subsection{Listen}
 \subsection{Bäume}
 \subsubsection{Grundbegriffe}
+\begin{description}
+    \item[Baum] Besteht aus Knoten und Kanten; Zyklenfreier Graph
+    \item[Wurzel] Einziger Knoten im Baum, der keinen Vater hat
+    \item[Kinder] Menge von Knoten aus Sicht von Knoten $k$, deren Vater $k$ ist  
+    \item[Höhe] Abstand zum am weitesten entfernten Blatt
+    \item[Niveau] Abstand zur Wurzel  
+    \item[Wald] Eine Menge an Bäumen 
+\end{description}
+\begin{lstlisting}
+# include <vector>
+
+struct Baum {
+    Knoten* Wurzel;
+};
+
+struct Knoten {
+    int Wert;              // Wert, den der Knoten speichert; muss nicht int sein     
+    Knoten* Vater;         // Pointer zu Vater
+    Knoten* Kinder;        // Array mit Pointern zu Kindern
+    int AnzahlKinder;      // Anzahl der Kinder im Array 
+    bool IstWurzel() {
+        return Vater == 0; // Null-Pointer
+    }
+    bool IstBlatt() {
+        return AnzahlKinder == 0;
+    }
+};
+\end{lstlisting}
 \subsubsection{Binärbäume}
+Binärbäume sind spezielle Bäume, in denen jeder Knoten maximal zwei Kinder hat. Jeder Baum lässt sich als Binärbaum darstellen. (s. \emph{left most child})
 \subsubsection{Suchbäume}
 \subsection{Warteschlangen}
 \subsection{Graphen}
@@ -322,8 +357,10 @@ Entspricht der Anzahl der benötigten Rechenschritte (Operationen mit konstanter
 
 
 \subsection{Die Klassen P und NP}
-\paragraph*{Klasse:}
-Menge mit Zugehörigkeitskriterium.
+\textbf{Klasse:} Menge mit Zugehörigkeitskriterium.
+\begin{align}
+    x \in K \Leftrightarrow x \text{ hat Kriterium für } K 
+\end{align}
 \subsubsection{[P]olynomiell Berechenbares}
 Existiert ein Algorithmus \emph{zur Lösung des Problems}, dessen Worst-Case-Laufzeit durch ein Polynom über der Problemgröße abschätzbar ist?
 \paragraph*{Robustheit von P:}
@@ -339,7 +376,7 @@ $\Rightarrow$ Zahlprobleme (ZP), Entscheidungsprobleme (EP), Optimierungsproblem
 \begin{itemize}
     \item $\in P$:
           \begin{itemize}
-              \item Sortierprobleme
+              \item Sortierprobleme (i.d.R. $O(n\:log(n))$)
               \item Kürzeste Wege
           \end{itemize}
     \item $\notin P$:
@@ -384,7 +421,7 @@ Menge aller Probleme aus $NP$, auf die alle Probleme aus $NP$ in $P$-Zeit zurüc
     \begin{allenpc}
         Alle Probleme aus $NPC$ sind in $P$-Zeit aufeinander rückführbar und somit gleich schwer. 
     \end{allenpc}
-\end{framed}.
+\end{framed}
 \subsubsection{Erfüllbarkeitsproblem (SAT)}
 Für einen bool'schen Term $T$ ist eine Variablenbelegung $B$ zu finden, die dazu führt, dass $T$ wahr wird. Dabei sind Terme in disjunktiver Normalform trivial und meistens nicht interessant.
 
