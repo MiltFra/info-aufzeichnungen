@@ -173,11 +173,40 @@ Bool'sche Algebra, Schaltalgebra, Aussage, Atome, Junktoren, Zweiwertigkeit, Ext
 \section{Sprachen \& Automaten}
 \subsection{Automaten}
 \subsubsection{Arten}
-\subsubsection{Endliche Automaten (EA)}
+Automaten lassen sich grundsätzlich in zwei Arten unterteilen:
+\\ Akzeptor:
+\begin{align}
+    A &\:= (Z,z\textsubscript{0},x,f,F) &\:\text{(Akzeptor)}\\
+    Z &\: &\:\text{(endliche Zustandsmenge)}\\
+    z\textsubscript{0} &\: \in Z &\:\text{(Startzustand)} \\
+    x &\: &\:\text{(Eingabealphabet)}\\
+    f &\: \subseteq Z \times X \times Z &\:\text{(Zustandsüberführungsrelation)}\\
+    F &\: \subseteq Z &\: \text{(akzeptierende Zustände)}
+\end{align}
+ Transduktor:
+\begin{align}
+    T &\:= (Q,\Sigma,\Gamma,q\textsubscript{0},\delta,F,\omega) &\:\text{(Transduktor)}\\
+    Q &\: &\:\text{(endliche Zustandsmenge)}\\
+    \Sigma &\: &\:\text{(Eingabealphabet: endliche, nicht-leere Menge von Symbolen)}\\
+    \Gamma &\: &\:\text{(Ausgabealphabet: endliche, nicht-leere Menge von Symbolen)}\\
+    q\textsubscript{0} &\: \in Q &\: \text{(Anfangszustand)}\\
+    \delta: &\: Q \times \Sigma \cup \{\epsilon\}\rightarrow 2^Q  &\: \text{(Zustandsübergangsfunktion)}\\
+    F &\: &\: \text{(endliche Menge von Endzuständen)}\\
+    \omega: &\: Q \times \Sigma \cup \{\epsilon\} \times Q \rightarrow \Gamma ^* &\: \text{(Ausgabefunktion)}
+\end{align}
+\subsubsection {Endliche Automaten (EA)}
 \subsubsection{Kellerautomaten (PDA)}
 \subsubsection{Linear beschränkte Automaten (LBA)}
 \subsubsection{Turingmaschinen (TM)}
 \subsection{Sprachen}
+Grammatiken beschreiben Sprachen und es ist möglich Grammatiken nach der Chomsky-Hierarchie zu unterteilen.\\
+\begin{tabular}{l | l | l}
+    Typ         & Grammatik       &  benötigter Automat               \\\hline
+    Typ-3-Grammatik     & reguläre Grammatik            & EA (Endlicher Automat)            \\
+    Typ-2-Grammatik     & kontextfreie Grammatik        & PDA (Kellerautomat)               \\
+    Typ-1-Grammatik     & kontextsensitive Grammatik    & LBA (linear beschränkter Automat) \\
+    Typ-0-Grammatik     & allgemeine Grammatik          & Turingmaschine          \\
+\end{tabular}
 \subsection{Grenzen}
 \section{Berechenbarkeitstheorie}
 \subsection{Entscheidbarkeit}
