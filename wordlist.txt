@@ -1,0 +1,60 @@
+Schaltwerk, Addierer, Stellenwertsystem, Tetralzahl, Variable, Zweierkomplementdarstellung
+
+Algorithmus,Rekursion,Iteration,Laufzeitabschätzung,divide and conquer,sortieren
+
+Aussagenlogik, Inferenz, Fakt,Regel,Prädikatenlogik,Unifikation
+deklarative Programmierung,Prolog,Haskell
+
+Datenstrukturen
+ Array
+ Liste
+ Warteschlange
+  Prioritätswarteschlange
+ Baum
+  Suchbaum
+  Binärer Heap
+ Graphen
+  Zusammenhang
+  Gerüst
+  Spannbaum
+  Planarität
+  bipartit
+  Breitendurchlauf
+  Tiefendurchlauf
+
+Hochzeitsproblem
+praktisch unlösbar
+ Hamiltonproblem
+ Färbung
+ TSP
+
+Chomsky-Hierarchie
+ Sprache 
+  reguläre Sprache
+  kontextfrei
+  Grammatik
+   Produktion
+   Syntax
+   Syntaxbaum
+  algorithmisch unlösbar
+   Halteproblem
+   Radofunktion
+  Automat
+   Registermaschine
+   Turingmaschine
+   Zustandsgraph
+
+Abzählbarkeit, Aufzählbarkeit,Entscheidbarkeit
+
+Datenbank
+ Integrität
+ Konsistenz
+ Normalisierung
+ Redundanz
+ SQL
+
+Entwicklungsmodelle
+ Klassendiagramme
+ Kernprozesse
+ OOP
+ Softwaretechnik

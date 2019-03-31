@@ -1,0 +1,525 @@
+\documentclass{article}
+\usepackage[a4paper]{geometry}
+\geometry{lmargin=2cm, rmargin=1.5cm}
+\usepackage[ngerman]{babel}
+\usepackage{dirtytalk}
+% Formatierungen
+\usepackage[a4paper]{geometry}
+\usepackage{fontspec}
+\setmainfont{Ubuntu}
+\usepackage[font=tiny, labelfont=bf]{caption}
+\usepackage{hyperref}
+\hypersetup{
+	colorlinks,
+	citecolor=black,
+	filecolor=black,
+	linkcolor=black,
+	urlcolor=black
+}
+\widowpenalty10000
+\clubpenalty10000
+% Header / Footer
+\usepackage{fancyhdr}
+\usepackage{datetime}
+\usepackage{lastpage}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\rightmark}
+\rhead{\thepage}
+% Table of contents
+\usepackage{tocloft}
+
+\cftsetindents{section}{0em}{6em}
+\cftsetindents{subsection}{1em}{5em}
+\cftsetindents{subsubsection}{2em}{4em}
+
+\renewcommand\cfttoctitlefont{\hfill\Large\bfseries}
+\renewcommand\cftaftertoctitle{\hfill\mbox{}}
+
+\setcounter{tocdepth}{3}
+
+% Math
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{array}
+\usepackage{todonotes}
+
+% Unterpunkt Stufe 4
+\usepackage{titlesec}
+	
+\setcounter{secnumdepth}{4}
+	
+\titleformat{\paragraph}
+{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
+\titlespacing*{\paragraph}
+{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+
+% Python Code
+% Default fixed font does not support bold face
+\DeclareFixedFont{\ttb}{T1}{txtt}{bx}{n}{10} % for bold
+\DeclareFixedFont{\ttm}{T1}{txtt}{m}{n}{10}  % for normal
+
+% Custom colors
+\usepackage{color}
+\definecolor{deepblue}{rgb}{0,0,0.5}
+\definecolor{deepred}{rgb}{0.6,0,0}
+\definecolor{deepgreen}{rgb}{0,0.5,0}
+
+\usepackage{listings}
+
+\usepackage{csquotes}
+\usepackage{framed}
+\linespread{1.2}
+\begin{document}
+\begin{titlepage}
+    \begin{center}
+        \Huge Abiturvorbereitung Informatik
+    \end{center}
+\end{titlepage}
+\tableofcontents
+\pagebreak
+\section{Datenbanken}
+\section{Datenstrukturen}
+Eine Datenstruktur ist ein Objekt zur Speicherung und Organisation von Daten. Dabei sind Daten immer so angeordnent, dass sie effizient, in Bezug auf Zeit und Speicher, für eine bestimmte Aufgabe genutzt werden können.
+\subsection{Schlangen}
+\subsection{Stapel}
+\subsection{Listen}
+\subsection{Bäume}
+Ein Baum ist ein \textbf{zyklenfreier Graph} und kann als eine \textbf{rekursive Struktur} definiert werden. Dabei hat jeder Teilbaum einen \textbf{Schlüssel} an der Wurzel, hat \textbf{beliebig viele Kinder} und gehört genau einem Gesamtbaum an. Letztere Eigenschaft ist nicht zwingend notwendig, aber angebracht, wenn man z.B. das Niveau des Knotens bestimmen möchte.
+\begin{lstlisting}[language=Go]
+type Tree interface {
+  Root() Tree
+  Value() interface{}
+  Children() []Tree
+  Size() int
+}
+\end{lstlisting}
+\subsubsection{Grundbegriffe}
+\begin{description}
+    \item[Wurzel] Einziger Knoten im Baum, der keinen Vater hat
+    \item[Schlüssel] Wert, der in einem Knoten gespeichert ist. Häufig auch Markierung, Gewicht oder einfach nur Wert.
+    \item[Kinder] Menge von Knoten aus Sicht von Knoten $k$, deren Vater $k$ ist  
+    \item[Vater] Genau der Knoten, der den Pointer zum aktuellen Knoten enthält. 
+    \item[Höhe] Abstand zum am weitesten entfernten Blatt
+    \item[Niveau] Abstand zur Wurzel  
+    \item[Wald] Eine Menge an Bäumen 
+\end{description}
+\subsubsection{Traversierung}
+Eine Traversierung beschreibt das Ausgeben aller Schlüssel des Baumes in einer bestimmten Reihenfolge. Dabei gibt es die Modi \textbf{pre-order} und \textbf{post-order}, die bei allen Bäumen funktionieren sowie \textbf{in-order} und \textbf{out-of-order}, die nur für Binärbäume definiert sind.
+\paragraph{pre/post-order}
+Bei diesen Traversierungen wird der Schlüssel des aktuellen Knotens entweder bevor oder nachdem die Kinder traversiert wurden ausgegeben. 
+\begin{lstlisting}[language=Go]
+case POSTORDER:
+  for i := range traversals {
+      res = append(res, traversals[i]...)
+  }
+  res = append(res, t.Value())
+  break
+case PREORDER:
+  res = append(res, t.Value())
+  for i := range traversals {
+      res = append(res, traversals[i]...)
+  }
+  break
+}
+\end{lstlisting}
+\paragraph{in/out-of-order}
+Bei diesen Traversierungen wird der Schlüssel des aktuellen Knotens zwischen den Traversierungen der beiden Teilbäume ausgegeben. Dabei ändert sich lediglich die Reihenfolge der Traversierungen der Kinder. Wird erst das linke Kind traversiert, nennt man das in-order. Sonst handelt es sich um einen out-of-order-Durchlauf.
+\begin{lstlisting}[language=Go]
+case INORDER:
+  if len(traversals) == 2 {
+      res = append(res, traversals[0]...)
+      res = append(res, t.Value())
+      res = append(res, traversals[1]...)
+      break
+  }
+case OUTORDER:
+  if len(traversals) == 2 {
+      res = append(res, traversals[1]...)
+      res = append(res, t.Value())
+      res = append(res, traversals[0]...)
+      break
+  }   
+\end{lstlisting}
+\subsubsection{Binärbäume}
+Binärbäume sind spezielle Bäume, in denen jeder Knoten maximal zwei Kinder hat. Jeder Baum lässt sich als Binärbaum darstellen. (s. \emph{left most child})\\
+Binärbäume sind häufig sinnvoll, weil sie als Suchbäume geeignet sind (s. unten), weil sie \textbf{speichereffizient} sind und weil Strukturen, wie z.B. die Operationsfolge mathematischer Terme, sich über solch eine Struktur darstellen lassen.
+\subsubsection{Suchbäume}
+Suchbäume verwalten Paare von Schlüsseln und Werten so, dass möglichst effizient zu jedem Schlüssel der Wert gefunden werden kann. Dabei bleibt die Baumstruktur erhalten. Dabei gibt es verschiedene Ansätze dies umzusetzen. Meistens ist von \textbf{vergleichsbasierten Bäumen} die Rede. D.h. jeder Schlüssel kann mit jedem anderen Schlüssel verglichen werden, um die Reihenfolge festzustellen. Alternativen zu dieser Limitation sind Bäume, die Bitoperationen zulassen. (z.B. Van Emde Boas Bäume)
+\paragraph{Binäre Suchbäume (BST)}
+Die meisten Suchbäume sind binär. Dabei befinden sich genau \textbf{jene Schlüssel im linken Teilbaum, die kleiner sind als der Schlüssel der jeweiligen Wurzel}. Alle Teilbäume folgen diesem Prinzip. Somit kann in einem balancierten BST in $O(log(n))$ der Wert zu einem beliebigen Schlüssel gefunden werden. Dabei ist $n$ die Anzahl der Schlüssel im Baum. Ist der Baum nicht balanciert, ist ein linearer Durchlauf nötig und der Zeitaufwand ist folglich $O(n)$. Die \textbf{Worst-Case-Laufzeit} dieser \textbf{look-up}-Operation ist also stets \textbf{proportional zur Höhe} des Baumes.
+\paragraph{B-Bäume}
+Diese Art von Suchbaum \textbf{balanciert sich selbst}. Somit eignen sich B-Bäume gut, um große Datenmengen wie z.B. in \textbf{Datenbanken oder Dateisystemen} zu verwalten.\\
+Jeder Knoten in einem B-Baum kann beliebig viele Schlüssel enthalten. Abgesehen von der Wurzel wird die Anzahl der Schlüssel jedoch auf Grund des Wachstums des Baumes auf $b$ bis $2b$ beschränkt. Dabei ist $b$ ein beliebiger Wert, der im Voraus festgelegt wurde. Somit kann beim Hinzufügen des $2b+1$-ten Schlüssels der Knoten in zwei $b$-Knoten geteilt werden. Der übrige Schlüssel steigt dann zum jeweiligen Vater auf. Sollte der geteilte Knoten die Wurzel gewesen sein, hat die neue Wurzel nun einen einzigen Schlüssel.\\
+Die Operationen \textbf{look-up}, \textbf{insert} und \textbf{delete} verlaufen stets in $O(n)$-Zeit. Dabei muss jedoch bei einer geeigneten Implementation weniger Pointern gefolgt werden, weil die Höhe des Baumes gering gehalten wird.
+\paragraph{AVL-Bäume}
+Ein AVL-Baum ist ein BST, bei dem durch bestimmte Operationen, sogenannte Rotationen, die Balance aufrecht erhalten wird. Dabei hat jeder Knoten den Parameter $h$, der angibt, wie groß die Höhendifferenz der linken und rechten Teilbäume ist.\\
+Sollte der Betrag dieser Differenz an einem beliebigen Knoten betragsmäßig größer als $1$ werden, werden Operationen zum Ausgleich dieser Differenz genutzt. Somit bleibt ein AVL-Baum stets \textbf{streng balanciert}. Somit ist diese Datenstruktur für \textbf{Anwendungen} geeignet, wo sich der Baum \textbf{selten verändert}.\\
+Im wesentlichen gibt es zwei Operationen: die L-Rotation und die R-Rotation. Dabei werden die Knoten um eine Wurzel so verschoben, dass bei einer R-Rotation der Knoten links von der Wurzel ihren Platz einnimmt. Somit wird der Baum nach rechts gedreht und die Differenz um $2$ geändert. Hinundwieder sind Doppelrotationen notwendig, bei denen zwei entgegengesetzte Rotationen auf verschiedenen Wurzeln hintereinandner durchgeführt werden. Dies ist der Fall, wenn die Höhendifferenz nicht auf den äußeren Zweigen, sondern auf zweigen im Baum problematisch ist. Dann müssen die Knoten erst von innen nach außen gedreht werden, sodass anschließend eine normale Rotation das Problem löst.
+\paragraph{Rot-Schwarz-Bäume}
+\subsection{Prioritätswarteschlangen}
+\subsubsection{Partiell geordnete Bäume (POT)}
+\subsubsection{Binäre Heaps}
+\subsection{Graphen}
+\section{Technische Grundlagen}
+\subsection{Grundbegriffe}
+Bool'sche Algebra, Schaltalgebra, Aussage, Atome, Junktoren, Zweiwertigkeit, Extensionabilität, Kontraposition, Kettenschluss, DeMorgan'sche Regeln, Wahrheitstabellen
+\subsection{Bool'sche Funktionen}
+\subsubsection{Vereinfachungen}
+\paragraph{Karnough-Veitch}
+\paragraph{Quine-McCluskey}
+\subsection{Addierer}
+\subsubsection{Halbaddierer}
+\subsubsection{Volladdierer}
+\subsubsection{Paralleladdierer}
+\subsubsection{Serienaddierwerk}
+\subsection{Flip-Flops}
+\subsubsection{RS-Flip-Flop}
+\subsubsection{D-Flip-Flop}
+\subsubsection{MS-JK-Flip-Flop}
+\section{Sprachen \& Automaten}
+\subsection{Automaten}
+\subsubsection{Arten}
+Automaten lassen sich grundsätzlich in zwei Arten unterteilen:
+\begin{align}
+    A &\:=(X, Z, z_0, \delta, F) &\text{(Akzeptor)}\\
+    T &\:=(X, Y, Z, z_0, \delta, \gamma)&\text{(Transduktor)}
+\end{align}
+Dabei können Transduktoren basierend auf Zustandsübergängen Ausgaben tätigen und Akzeptoren in akzeptierende Zustände übergehen.
+\subsubsection {Endliche Automaten (EA)}
+Insbesondere gilt bei endlichen Automaten:
+\begin{align}
+    X &\:\subset \mathbb{N} &\text{(endl. Eingabealphabet)}\\
+    Y &\:\subset \mathbb{N} &\text{(endl. Ausgabealphabet)}\\
+    Z &\:\subset \mathbb{N} &\text{(endl. Zustandmenge)}\\
+    z_0 &\:\in Z &\text{(Startzustand)}\\
+    \delta &\:: Z \times X \rightarrow Z &\text{(Übergangsfunktion)}\\
+    \gamma &\:: Z \times X \rightarrow Y &\text{(Ausgabefunktion)}\\
+    F &\:\subseteq Z &\text{(Menge akzeptierender Zustände)}
+\end{align}
+\subsubsection{Kellerautomaten (PDA)}
+Kellerautomaten unterscheiden sich an einer wesentlichen Stelle: Statt eines einzigen Zeichens eines endlichen Alphabetes, dem aktuellen Zustand, können Kellerautomaten nun undendlich viele solche Zeichen schreiben. Jene Werte werden auf einem Stapel bzw. einem Kellerspeicher gespeichert. D.h. es kann immer nur auf das letzte geschriebene Zeichen zugegriffen werden. Hinzu kommt außerdem die Entscheidung, ob der Automat in einem Schritt ein Zeichen auf den Stapel schreibt oder eines entfernt.
+\subsubsection{Linear beschränkte Automaten (LBA)}
+
+\subsubsection{Turingmaschinen (TM)}
+\subsubsection{Registermaschinen (RM)}
+\subsection{Sprachen}
+Grammatiken beschreiben Sprachen und es ist möglich Grammatiken nach der Chomsky-Hierarchie zu unterteilen.\\
+\begin{tabular}{l | l | l}
+    Typ         & Grammatik       &  benötigter Automat               \\\hline
+    Typ-3-Grammatik     & reguläre Grammatik            & EA (Endlicher Automat)            \\
+    Typ-2-Grammatik     & kontextfreie Grammatik        & PDA (Kellerautomat)               \\
+    Typ-1-Grammatik     & kontextsensitive Grammatik    & LBA (linear beschränkter Automat) \\
+    Typ-0-Grammatik     & allgemeine Grammatik          & Turingmaschine          \\
+\end{tabular}
+\subsection{Grenzen}
+\section{Berechenbarkeitstheorie}
+\subsection{Entscheidbarkeit}
+Eine Sprache $L$ ist entscheidbar genau dann, wenn die charakteristische Funktion $\chi$ berechenbar ist.
+\begin{equation}
+    \chi _L(x)=
+    \begin{cases}
+        1, & \text{wenn } x\in L     \\
+        0, & \text{wenn } x\not\in L
+    \end{cases}
+\end{equation}
+\subsection{Semi-Entscheidbarkeit}
+Eine Sprache $L$ ist semi-entscheidbar genau dann, wenn die partielle charakteristische Funktion $\chi$ berechenbar ist.
+\begin{equation}
+    \chi _L(x)=
+    \begin{cases}
+        1,                  & \text{wenn } x\in L \\
+        \text{undefiniert}, & \text{sonst}
+    \end{cases}
+\end{equation}
+bzw.
+\begin{equation}
+    \chi _L(x)=
+    \begin{cases}
+        0,                  & \text{wenn } x\not\in L \\
+        \text{undefiniert}, & \text{sonst}
+    \end{cases}
+\end{equation}
+\subsection{Berechenbarkeit}
+Ein Problem ist berechenbar, genau dann wenn ein Algorithmus zur Lösung des Problems existiert.
+\subsection{Rekursive Aufzählbarkeit}
+\Rightarrow NICHT Abzählbarkeit!\\\\
+Menge $M$ aus $A*$ heißt rekursiv aufzählbar, genau dann wenn
+\begin{equation}
+    |M|=0 \vee f:\mathbb{N}\rightarrow A* \wedge M=\{f(0), f(1),...\}
+\end{equation}
+Dabei muss $f$ total und berechenbar sein.\\
+\newtheorem*{RaSe}{Satz}
+\begin{framed}
+    \begin{RaSe}
+        $M$ ist semi-entscheidbar genau dann, wenn $M$ rekursiv aufzählbar ist.
+        \begin{proof}
+            Zweiteilig:
+            \begin{enumerate}
+                \item $M$ ist rekursiv aufzählbar \Rightarrow $M$ ist semi-entscheidbar:\\
+                      Solange $f(n) \not= w$, inkrementiere $n$
+                \item $M$ ist semi-entscheidbar \Rightarrow $M$ ist rekursiv aufzählbar:\\
+                      Zähle alle $w$ aus $A*$ auf und gibt diejenigen zurück, für die $\chi_M(x) = 1$ ist.
+                      \qedhere
+            \end{enumerate}
+        \end{proof}
+    \end{RaSe}
+\end{framed}
+\subsection{Das Wortproblem}
+\Rightarrow $W\in L(G)$?\\\\
+\begin{tabular}{l | l}
+    Zu erkennende Sprache       & Erkennender Automat               \\\hline
+    endliche Sprache            & Zyklenfreier endlicher Automat    \\
+    Typ-3-Sprache               & EA (Endlicher Automat)            \\
+    Typ-2-Sprache               & PDA (Kellerautomat)               \\
+    Typ-1-Sprache               & LBA (linear beschränkter Automat) \\
+    Turingentscheidbare Sprache & TM (Turingmaschine)               \\\hline
+    Typ-0-Sprache               & nicht allg. entscheidbar
+\end{tabular}
+\begin{framed}
+\newtheorem*{Typ-1-Entscheidbarkeit}{Satz}
+\begin{Typ-1-Entscheidbarkeit}
+Typ-1-Sprachen sind entscheidbar.
+\begin{proof}
+    Ansatz: Längenmonotonie\\
+    Verfolge alle Pfade der Bildungsvorschriften solange, bis der Ausdurck länger ist als das Wort. Entweder das Wort wird dabei gefunden oder es ist nicht in der Sprache enthalten. \qedhere
+\end{proof}
+\end{Typ-1-Entscheidbarkeit}
+\end{framed}
+\subsection{Probleme}
+\subsubsection{Allgemein}
+Eine $n$-stellige Wortfunktion:
+\begin{equation}
+    f: \left(A*\right)^n \rightarrow A*; \: n \in \mathbb{N}
+\end{equation}
+F\"ur eine $n$-stellige Eingabe gibt es eine Ausgabe.
+\subsubsection{Entscheidungsproblem}
+Eine $n$-stellige Wortfunktion:
+\begin{equation}
+    f: \left(A*\right)^n \rightarrow\{0, 1\}
+\end{equation}
+F\"ur eine $n$-stellige Eingabe gibt es eine Ausgabe, wahr oder falsch.
+\subsubsection{Wieviele Probleme gibt es?}
+\begin{framed}
+    \newtheorem*{Goedel}{Gödel'scher Unvollständigkeitssatz}
+    \begin{Goedel}
+        In jedem widerspruchsfreien Axiomensystem gibt es Sätze, die nicht mit den Mitteln dieses Systems bewiesen werden können. (Kurt Gödel)
+    \end{Goedel}
+\end{framed}
+\begin{framed}
+    \newtheorem*{MehrProbleme}{Satz}
+    \begin{MehrProbleme}
+        Es gibt mehr Probleme als Algorithmen.
+        \begin{proof}
+            Was ist ein Algorithmus? Eine Turingmaschine. Über Gödelisierung wird klar, dass sich jede Turingmaschine als natürliche Zahl darstellen lässt. Somit ist die Menge der Turingmaschinene abzählbar.\\
+            Was ist ein Problem? Eine $n$-stellige Wortfunktion. Jene Worte können aus einer beliebigen Menge bzw. Sprache stammen. Wir wählen die Menge der reellen Zahlen $\mathbb{R}$. Mit Hilfe der Cantor-Diagonalisierung können wir zeigen, dass $\mathbb{R}$ überabzählbar ist. Somit gibt es mehr Worte und damit auch mehr Wortfunktionen als Algorithmen.
+            \qedhere
+        \end{proof}
+    \end{MehrProbleme}
+\end{framed}
+\subsection{Turingberechenbarkeit}
+s. Turingmaschine\\\\
+$f: A* \rightarrow A*$ heißt turingberechenbar genau dann, wenn eine Turingmaschine $TM$ existiert, sodass für alle $w_1, w_2$ aus $A*$ gilt:
+\begin{equation}
+    f(w_1)=w_2\Leftrightarrow \left[TM-z_0,w_1\right]\rightarrow \left[TM-z_1,w_2\right]
+\end{equation}
+\begin{framed}
+    \newtheorem*{Church}{Churche These}
+    \begin{Church}
+        Jede im intuitiven Sinn berechenbare Funktion ist auch turingberechenbar.
+    \end{Church}
+\end{framed}
+\subsection{Die Rad\'o-Funktion}
+Die Rado-Funktion $\Sigma(n)$ gibt zur\"uck, wie viele Zeichen eine terminierende Turingmaschine mit $n$ Zuständen auf ein anfangs leeres Band schreiben kann. Dabei verfügt die Maschine nur über ein binäres Alphabet $\{0, 1\}$ und das leere Zeichen ist $0$. Die Turingmaschine, die mit $n$ Zuständen $\Sigma(n)$ Zeichen schreibt heißt fleißiger Bieber (engl. \emph{busy beaver}).\\
+\\
+Dabei ist $\Sigma(6) > 3.5 \cdot 10^{18267}$.
+
+\subsubsection{Ermittlung des Fleißigen Biebers}
+
+Alle Kandidaten können aufgezählt werden.
+\begin{itemize}
+    \item beim binären Alphabet gibt es $2n$ mögliche Konstellationen, da in $n$ Zuständen zwei Zeichen gelesen werden können.
+    \item Außerdem gibt es $2\cdot2\cdot n$ mögliche Reaktionen (Zwei Zeichen $\cdot$ Zwei Bewegungen $\cdot n$ Reaktionen)
+    \item somit gibt es für $n$ Zustände $(4n)^{2n}$ Kandidaten. Die probiert man aus...
+\end{itemize}
+\subsubsection{Unberechenbarkeit der Rad\'o-Funktion}
+\begin{framed}
+    \newtheorem*{rado}{Satz}
+    \begin{rado}
+        Die Funktion $\Sigma$ ist nicht berechenbar.
+
+        \begin{proof}
+            Wir zeigen, dass $\Sigma$ schneller wächst als jede berechenbare Funktion $f$.\\
+            Dazu brauchen wir drei Turingmaschinen:
+            \begin{itemize}
+                \item $M_N$ druckt $n$ Striche auf ein leeres Band, weniger als $n$ zustände.
+                \item $M_D$ verdoppelt die Anzahl der Striche auf dem Band, hat $c$ Zustände.
+                \item $M_F$ berechnet $f$ mit $p$ Zuständen.
+            \end{itemize}
+            Wir verknüpfen: $M_N | M_D | M_F$ \\
+            \Rightarrow $f(2n)$ Striche mit $p+n+c$ Zuständen.\\
+            lt. Definition ist $\Sigma(p+n+c)$ mindestens so groß wie $f(2n)$, weil mit $p+n+c$ Zuständen nun $f(2n)$ Striche auf das Band gemalt werden können.\\
+            \Rightarrow $\Sigma(n+p+c) \geq f(2n)$\\
+            mit $n\rightarrow\infty$: $n>p+c$\\$\Rightarrow\Sigma(2n) > \Sigma(p+n+c)\geq f(2n)$\\
+                \Rightarrow $\Sigma(2n)>f(2n)$\qedhere
+        \end{proof}
+    \end{rado}
+\end{framed}
+\subsection{Satz von Rice}
+\newtheorem*{rice}{Satz von Rice}
+\begin{framed}
+    \begin{rice}
+        Es gibt keinen Algorithmus, der in der Lage ist zu entscheiden, ob eine beliebige Turingmaschine (bzw. Funktion) eine nicht triviale Eigneschaft hat, oder nicht. 
+    \end{rice} 
+\end{framed}
+Dabei ist eine triviale Eigenschaft solch eine, die entweder Teil aller Turingmaschinen ist oder gar keiner.\\
+\\
+Somit ist es unmöglich die simpelsten Eigenschaften allgemein für alle Programme zu bestimmen.
+\section{Praktisch Unberechenbares}
+\begin{quote}
+    \emph{
+        Berechenbarkeit ist nur praktikabel, wenn weniger Bits als Atome im Universum und weniger Rechenzeit als die Lebensdauer der Sonne erforderlich sind.
+    }
+\end{quote}
+\Rightarrow Exponentiell w\"achst zu schnell!
+\paragraph*{Rechenzeit:}
+Entspricht der Anzahl der benötigten Rechenschritte (Operationen mit konstanter Dauer)
+\begin{itemize}
+    \item Worst-Case: Maximum aller Rechenzeiten für denkbare Eingaben
+    \item Average-Case: Erwartungswert der Rechenzeit
+\end{itemize}
+
+
+\subsection{Die Klassen P und NP}
+\textbf{Klasse:} Menge mit Zugehörigkeitskriterium.
+\begin{align}
+    x \in K \Leftrightarrow x \text{ hat Kriterium für } K 
+\end{align}
+\subsubsection{[P]olynomiell Berechenbares}
+Existiert ein Algorithmus \emph{zur Lösung des Problems}, dessen Worst-Case-Laufzeit durch ein Polynom über der Problemgröße abschätzbar ist?
+\paragraph*{Robustheit von P:}
+Unabhängig von Rechnermodell variantenstabil:\\
+$\Rightarrow$ Zahlprobleme (ZP), Entscheidungsprobleme (EP), Optimierungsprobleme (OP)\\\\
+\begin{tabular}{l | l}
+    Umwandlung          & Rechenzeit  \\ \hline
+    ZP $\rightarrow$ EP & $O(1)$      \\
+    EP $\rightarrow$ ZP & $O(log(N))$ \\
+    ZP $\rightarrow$ OP & $O(N)$
+\end{tabular}
+\paragraph*{Beispiele}
+\begin{itemize}
+    \item $\in P$:
+          \begin{itemize}
+              \item Sortierprobleme (i.d.R. $O(n\:log(n))$)
+              \item Kürzeste Wege
+          \end{itemize}
+    \item $\notin P$:
+          \begin{itemize}
+              \item Ackermann-P\'eter-Funktion
+          \end{itemize}
+\end{itemize}
+\subsubsection{[N]ichtdeterministisch [P]olynomiell Berechenbares}
+Existiert ein Algorithmus \emph{zur Überprüfung einer potentiellen Lösung}, dessen Worst-Case-Laufzeit durch ein Polynom über der Problemgröße abschätzbar ist?
+\paragraph*{Beispiele}
+\begin{itemize}
+    \item Hamilton-Pfad
+\end{itemize}
+\paragraph*{MERKE:}
+$P \subseteq NP \Rightarrow P = NP\not\equiv P \subset NP$
+\paragraph*{Hamilton-Pfad/Kreis (HAM-P/K)}
+Existiert in einem gegebenen Graphen einen Pfad/Kreis, der jeden Knoten genau ein mal enthält (und dabei keine Kante doppelt verwendet)?
+\newtheorem*{hamiltonnp}{Satz}
+\begin{framed}
+    \begin{hamiltonnp}
+        Das Finden eines Hamilton-Kreises bzw. eines Hamilton-Pfades ist ein Problem aus NP. 
+        \begin{proof}
+            Lösungen lassen sich in polynomialzeit Überprüfen indem nacheinander jeder Knoten des Pfades besucht wird. Sollte zwischen zwei in der Lösung aufeinanderfolgenden Knoten keine Kante existieren, so ist die Lösung ungültig. Im Falle des Hamilton-Kreises muss natürlich überprüft werden, ob eine Kante vom letzten zum ersten Knoten existiert.\\
+            Das besuchen aller Knoten wächst linear mit der Anzahl der Knoten, somit erfolgt die Überprüfung in $O(N)$.
+        \end{proof}
+    \end{hamiltonnp}
+\end{framed}
+\subsection{Die Klasse NPC}
+Frage: $P = NP$ oder $P \subset NP$?
+\subsubsection{NP-Vollständigkeitstheorie}
+Man nehme das schwerste Problem aus $NP$ und versuche es in $P$-Zeit zu lösen.\\
+Entweder das funktioniert, dann ist $P = NP$, oder das funktioniert nicht, dann ist $P \subset NP$.
+\subsubsection{Was sind die schwersten NP-Probleme?}
+\begin{itemize}
+    \item Lösung beinhaltet Lösung aller Probleme in $NP$.
+    \item Lösung aller anderer Probleme in $NP$ kann in $P$-Zeit auf die Lösung der $NPC$-Probleme zurückgeführt werden.
+\end{itemize}
+\subsubsection{Definition}
+Menge aller Probleme aus $NP$, auf die alle Probleme aus $NP$ in $P$-Zeit zurückführbar sind.
+\begin{framed}
+    \newtheorem*{allenpc}{Merke}
+    \begin{allenpc}
+        Alle Probleme aus $NPC$ sind in $P$-Zeit aufeinander rückführbar und somit gleich schwer. 
+    \end{allenpc}
+\end{framed}
+\subsubsection{Erfüllbarkeitsproblem (SAT)}
+Für einen bool'schen Term $T$ ist eine Variablenbelegung $B$ zu finden, die dazu führt, dass $T$ wahr wird. Dabei sind Terme in disjunktiver Normalform trivial und meistens nicht interessant.
+
+\subsubsection{Travelling Salesman Problem (TSP)}
+Es ist ein möglichst kurzer Hamilton-Kreis in einem gegebenen Graphen zu finden. Dabei kann entweder das Entscheidungsproblem gemeint sein, wobei gefragt wird ob ein Hamilton-Kreis existiert, der die Länge $x$ nicht überschreitet, oder es geht um das Optimierungsproblem, wobei es den kürzesten Hamilton-Kreis zu finden gilt.
+\paragraph*{Lösungsansätze}
+\begin{itemize}
+    \item Durchlaufen aller Permuationen
+    \item Dynamisch
+    \item \href{https://github.com/miltfra/tsp}{Branch and Bound}
+\end{itemize}
+\paragraph*{Anwendungen}
+\begin{itemize}
+    \item Routenplanung
+    \item Finden von Superpermutationen
+    \item Lochkartenautomaten
+\end{itemize}
+\subsubsection{Färbungsproblem (COL)}
+Es ist eine Belegung der Knoten eines Graphen mit sogenannten Farben, d.h. Werten, zu finden, die sicherstellt, dass keine zwei benachbarten Knoten die gleiche Färbung haben. \\
+\indent Dabei ist beim Entscheidungsproblem die Frage zu beantworten, ob eine Färbung mit $x$ Farben existiert. Beim Optimierungsproblem hingegen ist eine der Färbungen zu finden, die die wenigsten Farben enthalten.
+\paragraph*{Anwendung}
+\begin{itemize}
+    \item Mobilfunknetze
+    \item Landkarten
+    \item Zeitplanung
+\end{itemize}
+\subsubsection{Cliquenproblem (CLIQUE)}
+Es ist eine möglichst große Menge an Knoten zu finden in der alle Elemente paarweise durch direkte Kanten miteinander verbunden sind. Dabei kann entweder das Entscheidungsproblem gemeint sein, wobei gefragt wird ob eine Clique der Größe $x$ existiert oder das Optimierungsproblem, wobei es die größte Clique zu finden gilt.\\
+\indent Dabei sind nicht zwingend alle Variationen in $NPC$, da sich beispielsweise alle potentiellen Cliquen der Größe $x$ in $O(\frac{N!}{(N-x)!})\approx O(N^x)$, also in $P$-Zeit überprüfen lassen.
+\paragraph*{Anwendung}
+\begin{itemize}
+    \item Zimmerbelegung
+\end{itemize}
+\subsubsection{Rucksackproblem (KNAPSACK)}
+Gegeben sei eine endliche Menge an Objekten $U$, denen die Funktionen $w$ und $v$ ein festes Gewicht sowie einen festen Wert zuordnen. Mit einer gegebenen Gewichtsschranke $W$ ist nun jene Teilmenge von $U$ zu bestimmen, die einerseits in Summe $W$ nicht überschreitet, aber andererseits die Summe der Werte maximiert.
+\subsubsection{Teilsummenproblem (SUBSET-SUM)}
+Gegeben sei eine endliche Menge an Zahlen $Z$, die Summanden, sowie eine Zielzahl $x$, die Summe. Nun ist eine Menge $z \subseteq Z$ zu finden, für die gilt: $x=\sum^{|z|}_{i=1} z_i$. 
+\subsubsection{Reduktionen}
+\paragraph{$NCOL \leq_p SAT$}
+Für jeden Knoten führen wir Variablen für alle möglichen Farben ein ($N \cdot |V|$). Nun benötigen wir für jeden Knoten Klauseln, die besagen, dass genau eine Farben wahr sein muss. Des Weiteren wird nun für jede Kante eine Klausel aufgeschrieben, die besagt, dass die beiden Knoten nicht die gleiche Farbe haben dürfen. \\
+\indent Somit können Knoten nur genau eine Farbe haben und benachbarte Knoten können nicht die gleiche Farbe haben. Sollte es eine Variablenbelegung geben, die das erfüllt, so gibt es eine Färbung für den Graphen mit $N$ Farben.
+\paragraph{$HAM \leq_p TSP$}
+Gesucht ist ein Hamilton-Kreis auf $G=(V,E)$. Wir erstellen einen Graphen $G'$ mit der gleichen Anzahl an Knoten. Nun erstellen wir alle Kanten in $G'$, die in $G$ exisitieren mit dem Gewicht $1$. Alle weiteren möglichen Kanten erhalten ein beliebiges Gewicht, welches Größer als $1$ sein muss. Auf diesem Graphen lassen wir das TSP laufen, welches uns die Länge der kürzesten Rundreise zurückgibt. \\
+\indent Sollte diese Rundreise haben, die gleich $|V|$ ist, so wissen wir, dass es in $G$ einen Hamilton-Kreis gibt. Sollte diese Rundreise länger sein, wissen wir, dass dieser Hamilton-Kreis nicht exisitiert, weil das TSP mindestens eine weitere Kante benötigt hat, obwohl eine Hamiltonkreis mit den Kantenlängen $1$ definitiv kürzer gewesen wäre.
+\section{Nebenläufige Prozesse}
+\subsection{Petri-Netze}
+\subsubsection{Definition}
+\begin{align}
+    N &\:= (P, T, F, W, C, m_0) &\: \text{(Petri-Netz)}\\
+    P &\:\cap T = \emptyset &\: \text{(Disjunktheit)}\\
+    |P| &\:> 0 &\:\text{(endl. Menge an Stellen)}\\
+    |T| &\:> 0 &\:\text{(endl. Menge an Transitionen)}    \\
+    F &\:\subseteq (P \times T) \cup (T \times P) &\:\text{(Flussrelation)}\\
+    W&:F\rightarrow \mathbb{N} &\:\text{(Gewichte)}\\
+    C&:P\rightarrow \mathbb{N} &\:\text{(Kapazitäten)}\\
+    m_0&:P\rightarrow \mathbb{N}_0 &\:\text{(Anfangsmarkierung)}
+\end{align}
+\subsubsection{Schaltregel}
+Eine Transition $t$ kann genau dann schalten, wenn alle Stellen im Vorbereich mindestens so viele Marken haben, wie durch die Kantengewichte beschreiben, und alle Stellen im Nachbereich nur so viele Marken haben, dass das Schalten der Transition diese nicht zum überlaufen bringt. Wenn $t$ schaltet, werden aus jeder Stelle des Vorbereiches so viele Marken entfernt, wie durch die Kantengewichte beschrieben. Des Weiteren werden jeder Stelle des Nachbereiches so viele Stellen hinzugefügt, wie durch die Kantengewichte beschrieben.
+\subsubsection{Begriffe}
+\begin{description}
+    \item[Vorbereich] Der Vorbereich eines Knotens $x\in P \cup T$ ist die Menge aller Knoten, die ausgehende Kanten zu $x$ haben.
+    \item[Nachbereich] Der Nachbereich eines Knotens $x\in P\cup T$ ist die Menge aller Knoten, die eingehende Kanten von $x$ haben. 
+\end{description}
+
+\end{document}

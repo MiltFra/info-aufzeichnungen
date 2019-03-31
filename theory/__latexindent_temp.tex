@@ -174,25 +174,18 @@ Bool'sche Algebra, Schaltalgebra, Aussage, Atome, Junktoren, Zweiwertigkeit, Ext
 \subsection{Automaten}
 \subsubsection{Arten}
 Automaten lassen sich grundsätzlich in zwei Arten unterteilen:
-\\ Akzeptor:
 \begin{align}
-    A &\:= (Z,z\textsubscript{0},x,f,F) &\:\text{(Akzeptor)}\\
-    Z &\: &\:\text{(endliche Zustandsmenge)}\\
-    z\textsubscript{0} &\: \in Z &\:\text{(Startzustand)} \\
-    x &\: &\:\text{(Eingabealphabet)}\\
-    f &\: \subseteq Z \times X \times Z &\:\text{(Zustandsüberführungsrelation)}\\
-    F &\: \subseteq Z &\: \text{(akzeptierende Zustände)}
-\end{align}
- Transduktor:
-\begin{align}
-    T &\:= (Q,\Sigma,\Gamma,q\textsubscript{0},\delta,F,\omega) &\:\text{(Transduktor)}\\
-    Q &\: &\:\text{(endliche Zustandsmenge)}\\
-    \Sigma &\: &\:\text{(Eingabealphabet: endliche, nicht-leere Menge von Symbolen)}\\
-    \Gamma &\: &\:\text{(Ausgabealphabet: endliche, nicht-leere Menge von Symbolen)}\\
-    q\textsubscript{0} &\: \in Q &\: \text{(Anfangszustand)}\\
-    \delta: &\: Q \times \Sigma \cup \{\epsilon\}\rightarrow 2^Q  &\: \text{(Zustandsübergangsfunktion)}\\
-    F &\: &\: \text{(endliche Menge von Endzuständen)}\\
-    \omega: &\: Q \times \Sigma \cup \{\epsilon\} \times Q \rightarrow \Gamma ^* &\: \text{(Ausgabefunktion)}
+    A &\:=(X, Z, z_0, \delta, F) &\text{(Akzeptor)}\\
+    T &\:=(X, Y, Z, z_0, \delta, \gamma)&\text{(Transduktor)}
+    \end{align}
+    \begin{align}
+    X &\:\subset \mathbb{N} &\text{(endl. Eingabealphabet)}\\
+    Y &\:\subset \mathbb{N} &\text{(endl. Ausgabealphabet)}\\
+    Z &\:\subset \mathbb{N} &\text{(endl. Zustandmenge)}\\
+    z_0 &\:\in Z &\text{(Startzustand)}\\
+    \delta &\:: Z \times X \rightarrow Z &\text{(Übergangsfunktion)}\\
+    \gamma &\:: Z \times X \rightarrow Y &\text{(Ausgabefunktion)}\\
+    F &\:\subseteq Z &\text{(Menge akzeptierender Zustände)}
 \end{align}
 \subsubsection {Endliche Automaten (EA)}
 \subsubsection{Kellerautomaten (PDA)}
