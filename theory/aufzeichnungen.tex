@@ -157,10 +157,37 @@ Die Operationen \textbf{look-up}, \textbf{insert} und \textbf{delete} verlaufen 
 Ein AVL-Baum ist ein BST, bei dem durch bestimmte Operationen, sogenannte Rotationen, die Balance aufrecht erhalten wird. Dabei hat jeder Knoten den Parameter $h$, der angibt, wie groß die Höhendifferenz der linken und rechten Teilbäume ist.\\
 Sollte der Betrag dieser Differenz an einem beliebigen Knoten betragsmäßig größer als $1$ werden, werden Operationen zum Ausgleich dieser Differenz genutzt. Somit bleibt ein AVL-Baum stets \textbf{streng balanciert}. Somit ist diese Datenstruktur für \textbf{Anwendungen} geeignet, wo sich der Baum \textbf{selten verändert}.\\
 Im wesentlichen gibt es zwei Operationen: die L-Rotation und die R-Rotation. Dabei werden die Knoten um eine Wurzel so verschoben, dass bei einer R-Rotation der Knoten links von der Wurzel ihren Platz einnimmt. Somit wird der Baum nach rechts gedreht und die Differenz um $2$ geändert. Hinundwieder sind Doppelrotationen notwendig, bei denen zwei entgegengesetzte Rotationen auf verschiedenen Wurzeln hintereinandner durchgeführt werden. Dies ist der Fall, wenn die Höhendifferenz nicht auf den äußeren Zweigen, sondern auf zweigen im Baum problematisch ist. Dann müssen die Knoten erst von innen nach außen gedreht werden, sodass anschließend eine normale Rotation das Problem löst.
-\paragraph{Rot-Schwarz-Bäume}
-\subsection{Prioritätswarteschlangen}
-\subsubsection{Partiell geordnete Bäume (POT)}
-\subsubsection{Binäre Heaps}
+\paragraph{Rot-Schwarz-Bäume (RSB)}
+RSB sind AVL-Bäumen sehr ähnlich. Es handelt sich ebenfalls um binäre Suchbäume mit dem Ziel mit Hilfe von Baumrotationen nach bestimmten Regeln ein Gleichgewicht an allen Knoten zu erhalten. Dazu wird nun jedoch kein Gleichgewichtskoeffizient sondern die Färbung der Knoten genutzt. Dabei gibt es zwei Farben, meist Rot und Schwarz. Insgesamt bestehen folgende Regeln:
+\begin{enumerate}
+    \item Jeder Knoten hat genau eine der Farben Rot und Schwarz.
+    \item Die Wurzel ist immer Schwarz.
+    \item Alle Blätter sind Schwarz.
+    \item Wenn ein Knoten Rot ist, sind beide Kinder Schwarz.
+    \item Jeder Pfad von einem Knoten zu jedem seiner Blätter ist gleich lang. 
+\end{enumerate}
+Dabei ist zu beachten, dass in den Blättern niemals tatsächliche Werte stehen.\\
+Insgesamt sorgen diese Regel dafür, dass der längste Pfad in einem der beiden Teilbäume maximal doppelt so lang sein darf wie der längste Pfad im anderen Teilbaum.
+
+\subsection{Prioritätswarteschlangen (PQ)}
+Prioritätswarteschlangen sind \textbf{abstrakte Datenstrukturen}, die sich ähnlich verhalten wie normale Schlangen. Dabei wird jedoch das übliche FIFO-Prinzip aufgeweicht indem \textbf{jedem Element eine Priorität} zugewiesen wird. Das Element was nun bei jeder \textbf{pop}-Operation entfernt wird, ist jenes, welches die höchste Priorität hat. Sollten mehrere Elemente mit dieser Priorität existieren gilt weiterhin das FIFO-Prinzip.
+\subsubsection{Partiell geordnete Bäume (POT/Heap)}
+Meistens werden PQs über eine Form der Partiell geordneten Bäume implementiert. Dabei gilt in einem partiell georndeten Baum nur, dass \textbf{kein Knoten eine niedrigere Priorität haben darf als eines seiner Kinder}.\\
+Es gibt verschiedene Heaps, die für verschiedene Anwendungen entworfen wurden. Damit ergeben sich auch viele verschiedene Laufzeit- und Speicherkomplexitäten. Des Weiteren kann die Effizienz auf tatsächlicher Hardware je nach Implementation variieren.
+\subsubsection{Binäre Arraybasierte Heaps}
+Die wohl einfachste und speichereffizienteste Implementation eines Heaps ist ein arraybasierter binärer Heap. Hierbei wird auf die Verwendung von Pointern nahezu gänzlich verzichtet und stattdessen eine \textbf{lineare Anordnung aller Werte in einem Array} genutzt. Dabei folgen die einzelnen Ebenen des Heaps aufeinander. So lässt sich der Vater jedes Indizes mit der folgenden Funktion berechnen:
+\begin{lstlisting}[language=go]
+func parent(index int) int {
+    return (index - 1) >> 1
+}
+\end{lstlisting}
+Analog gilt für das Finden des rechten Kindes:
+\begin{lstlisting}[language=go]
+func right_child(index int) int {
+    return (index << 1) + 1
+}
+\end{lstlisting}
+In beiden fällen wurde die Multiplikation/Division mit zwei durch Shiftoperatoren ersetzt. Diese haben einen deutlichen Vorteil im bereich der Effizienz und werden deshalb bei den Implementationen in der Regel verwendet.
 \subsection{Graphen}
 \section{Technische Grundlagen}
 \subsection{Grundbegriffe}
