@@ -66,7 +66,7 @@ func Traverse(t Tree, mode int) []interface{} {
 // Leaves returns all the values of the nodes
 // that don't have children.
 func Leaves(t Tree) []Tree {
-	if t.IsLeaf() {
+	if IsLeaf(t) {
 		return []Tree{t}
 	}
 	res := make([]Tree, 0)

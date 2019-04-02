@@ -157,7 +157,7 @@ Die Operationen \textbf{look-up}, \textbf{insert} und \textbf{delete} verlaufen 
 Ein AVL-Baum ist ein BST, bei dem durch bestimmte Operationen, sogenannte Rotationen, die Balance aufrecht erhalten wird. Dabei hat jeder Knoten den Parameter $h$, der angibt, wie groß die Höhendifferenz der linken und rechten Teilbäume ist.\\
 Sollte der Betrag dieser Differenz an einem beliebigen Knoten betragsmäßig größer als $1$ werden, werden Operationen zum Ausgleich dieser Differenz genutzt. Somit bleibt ein AVL-Baum stets \textbf{streng balanciert}. Somit ist diese Datenstruktur für \textbf{Anwendungen} geeignet, wo sich der Baum \textbf{selten verändert}.\\
 Im wesentlichen gibt es zwei Operationen: die L-Rotation und die R-Rotation. Dabei werden die Knoten um eine Wurzel so verschoben, dass bei einer R-Rotation der Knoten links von der Wurzel ihren Platz einnimmt. Somit wird der Baum nach rechts gedreht und die Differenz um $2$ geändert. Hinundwieder sind Doppelrotationen notwendig, bei denen zwei entgegengesetzte Rotationen auf verschiedenen Wurzeln hintereinandner durchgeführt werden. Dies ist der Fall, wenn die Höhendifferenz nicht auf den äußeren Zweigen, sondern auf zweigen im Baum problematisch ist. Dann müssen die Knoten erst von innen nach außen gedreht werden, sodass anschließend eine normale Rotation das Problem löst.
-\paragraph{Rot-Schwarz-Bäume (RSB)}
+\paragraph{Rot-Schwarz-Bäume (RBT)}
 RSB sind AVL-Bäumen sehr ähnlich. Es handelt sich ebenfalls um binäre Suchbäume mit dem Ziel mit Hilfe von Baumrotationen nach bestimmten Regeln ein Gleichgewicht an allen Knoten zu erhalten. Dazu wird nun jedoch kein Gleichgewichtskoeffizient sondern die Färbung der Knoten genutzt. Dabei gibt es zwei Farben, meist Rot und Schwarz. Insgesamt bestehen folgende Regeln:
 \begin{enumerate}
     \item Jeder Knoten hat genau eine der Farben Rot und Schwarz.
@@ -187,8 +187,80 @@ func right_child(index int) int {
     return (index << 1) + 1
 }
 \end{lstlisting}
-In beiden fällen wurde die Multiplikation/Division mit zwei durch Shiftoperatoren ersetzt. Diese haben einen deutlichen Vorteil im bereich der Effizienz und werden deshalb bei den Implementationen in der Regel verwendet.
+In beiden fällen wurde die Multiplikation/Division mit zwei durch Shiftoperatoren ersetzt. Diese haben einen deutlichen Vorteil im bereich der Effizienz und werden deshalb bei den Implementationen in der Regel verwendet.\\
+Des Weiteren gibt es zwei wichtige Methoden, die ein Heap ausführen können muss. Diese dienen dazu, die \textbf{Heapeigenschaft} aus sicht eines Elementes \textbf{nach oben und nach unten} herzustellen. Folglich nennen wir diese Methoden \textbf{up} und \textbf{down}.\\
+Bei diesen Operationen wird das Element an dem bestimmten Index solange in die jeweilige Richtung verschoben, bis der Vater bzw. die Kinder nicht kleiner bzw. größer sind. Das Verschieben kann entweder über direktes tauschen geschehen oder durch einen Ringtausch optimiert werden. Bei letzterem Verfahren wird sich zu beginn der zu verschiebende Wert gemerkt und anschließend alle anderen Werte nachgerückt. Sobald nicht mehr weiter verschoben werden muss, kann der Wert wieder in das Array geschrieben werden.\\
+Wenn man nun ein Element in den Heap einfügt, wird die up-Methode benötigt. Das liegt daran, dass das Element an das Ende des Heaps, d.h. des Arrays, geschrieben wird und von dort nun die Heapeigenschaft hergestellt werden muss. Sollte das erste Element ausgegeben werden, wird genau umgekehrt vorgegangen. Das letzte Element im Array wird an die erste Stelle geschrieben und mit Hilfe der down-Methode kann auch in diesem Fall wieder ein valider Heap generiert werden.\\
+Einige Algorithmen (z.B Heapsort) erfordern es, aus einem bereits exisitierenden Array einen Heap zu generieren. Hierzu besteht natürlich immer die Möglichkeit, jedes Element einzeln in einen neuen Heap einzufügen. Diese Variante ist jedoch, je nach Implementation, eventuell weder speicher- noch laufzeiteffizient. Stattdessen wird auf alle Elemente beginnend bei der Hälfte des Arrays bis zur Wurzel nacheinander die down-Methode angewandt. Dass diese Operation funktioniert, hängt damit Zusammen, dass stets mindestens die Hälfte der Elemente Blätter sind und somit nicht mehr nach unten verschoben werden müssen. Es lässt sich zeigen, dass somit der Heap in $O(N\,log(N))$-Zeit initialisiert werden kann. Das ist die entscheidende Komponente in der Laufzeit des Heapsort-Algorithmus.
 \subsection{Graphen}
+Ein Graph ist ein Tupel der aus einer Menge von Knoten und einer Menge von Kanten, die diese Knoten miteinander verbinden. Dabei sind Markierungen Werte, die Knoten und vor allem Kanten haben können.
+\begin{align}
+    G &\:= (V,E) &\text{(Graph)}\\
+    V &\: \subset \mathbb{N} &\text{(endl. Knotenmenge)}\\
+    E &\:\subseteq V\times V &\text{(endl. Kantenmenge)}\  
+\end{align}
+Dabei hängt die Kantendefinition vom jeweiligen Problem ab. Einerseits gibt es gerichtete und ungerichtete Kanten, die sich darin unterscheiden, dass ungerichtete Kanten in beide Richtungen verlaufen. Andererseits kann es zwischen zwei Knoten mehr als eine Kante geben. Somit ist es möglich, dass $E >|V\times V|$.
+\subsubsection{Durchläufe}
+Graphen können nach verschiedenen Mustern durchlaufen werden. Dabei unterscheiden sich die einzelnen Möglichkeiten darin, nach welchen Kriterien Knoten die zu besuchen sind gewählt werden. Des Weiteren unterscheidet man zwischen einfachen Durchläufen, die jeden Knoten nur ein mal besuchen, und vollständigen Durchläufen, bei denen jeder Pfad durchlaufen wird, d.h. es wird nicht global gespeichert, welcher Knoten insgesamt schon besucht wurde.
+\paragraph{Tiefensuche (DFS)}
+Bei einer Tiefensuche werden die verfügbaren Folgeknoten in einem Stapel, das heißt nach dem LIFO-Prinzip verwaltet. Die Nachbarn des besuchten Knoten werden also auf einen Stapel gelegt und dann wird das oberste Element des Stapels besucht. Damit folgt, dass im Baum, den ein vollständiger Durchlauf ergeben würde, zunächst zu den Blättern gegangen wird, bevor Geschwister besucht werden.
+\begin{lstlisting}[language=go]
+func DFS(g Graph, start int) []int {
+    res := make([]int, 0, len(g.V()))
+    v := make([]bool, len(g.V()))
+    s := stack.New()
+    for c := start; !s.IsEmpty(); c = s.Get() {
+        res = append(res, c)
+        v[c] = true
+        n := Neighbours(g, c)
+        for i := range n {
+            if !v[n[i]] {
+                s.Put(n[i])
+            }
+        }
+    }
+    return res
+}
+\end{lstlisting}
+\paragraph{Breitensuche (BFS)}
+Eine Breitensuche ist genau das gleiche wie eine Tiefensuche mit dem einzigen Unterschied, dass nun das FIFO-Prinzip gilt, also eine Schlange an Stelle des Stapels verwendet wird. Es werden somit alle Knoten in aufsteigender Entfernung in Kanten hinzugefügt.
+\begin{lstlisting}[language=go]
+func DFS(g Graph, start int) []int {
+    res := make([]int, 0, len(g.V()))
+    v := make([]bool, len(g.V()))
+    q := queue.New()
+    for c := start; !s.IsEmpty(); c = q.Get() {
+        res = append(res, c)
+        v[c] = true
+        n := Neighbours(g, c)
+        for i := range n {
+            if !v[n[i]] {
+                q.Put(n[i])
+            }
+        }
+    }
+    return res
+}
+\end{lstlisting}
+\subsubsection{Pfade}
+Ein Pfad ist je nach Definition entweder eine \textbf{Folge aufeinanderfolgender Knoten oder} eine Folge aufeinanderfolgender \textbf{Kanten}. Dabei wird ein Pfad als \textbf{Kreis} bezeichnet, wenn er \textbf{an jenem Knoten endet, wo er beginnt.} Weiterhin haben Pfad ein Gewicht, welches sich aus der Summe der Kantengewichte ergibt. 
+\paragraph{Dijkstra}
+Dijkstras Algorithmus versucht möglichst effizient in einem unbekannten Graphen den kürzesten Pfad zwischen zwei Punkten zu finden. Dabei bezieht sich die Länge des Pfades natürlich auf das Gewicht. Dabei betrachtet der Algorithmus im schlechtesten Fall jede potentielle Gerichtete Kante genau ein mal. D.h. die Zeitkomplexität ist $O(|V|^2)$.\\
+Der Algorithmus lautet wiefolgt:
+\begin{enumerate}
+    \item Markiere alle Knoten als unbesucht und setze ihre Entfernungen auf unendlich.
+    \item Besuche den Startknoten und setze seine Entfernung auf null.
+    \item Setze die Entfernung aller Nachbarn auf die Entfernung des aktuellen Knoten plus die Länge der dazugehörigen Kante insofern nicht bereits eine niedrigere Entfernung angegeben ist.
+    \item Besuche den nächsten unbesuchten Knoten mit der geringsten Entfernung vom Startknoten.
+    \item Wenn dieser Knoten nicht der Zielknoten ist, gehe zu 3.
+    \item Gib die Entfernung des Zielknotens aus.
+\end{enumerate}
+\paragraph{A*}
+\subsubsection{Spannbäume}
+\paragraph{Prim}
+\paragraph{Kruskal}
+\subsubsection{Zusammenhang}
+
 \section{Technische Grundlagen}
 \subsection{Grundbegriffe}
 Bool'sche Algebra, Schaltalgebra, Aussage, Atome, Junktoren, Zweiwertigkeit, Extensionabilität, Kontraposition, Kettenschluss, DeMorgan'sche Regeln, Wahrheitstabellen
@@ -277,7 +349,7 @@ Menge $M$ aus $A*$ heißt rekursiv aufzählbar, genau dann wenn
     |M|=0 \vee f:\mathbb{N}\rightarrow A* \wedge M=\{f(0), f(1),...\}
 \end{equation}
 Dabei muss $f$ total und berechenbar sein.\\
-\newtheorem*{RaSe}{Satz}
+\newtheorem{RaSe}{Satz}
 \begin{framed}
     \begin{RaSe}
         $M$ ist semi-entscheidbar genau dann, wenn $M$ rekursiv aufzählbar ist.
@@ -305,7 +377,7 @@ Dabei muss $f$ total und berechenbar sein.\\
     Typ-0-Sprache               & nicht allg. entscheidbar
 \end{tabular}
 \begin{framed}
-\newtheorem*{Typ-1-Entscheidbarkeit}{Satz}
+\newtheorem{Typ-1-Entscheidbarkeit}{Satz}
 \begin{Typ-1-Entscheidbarkeit}
 Typ-1-Sprachen sind entscheidbar.
 \begin{proof}
@@ -329,13 +401,13 @@ Eine $n$-stellige Wortfunktion:
 F\"ur eine $n$-stellige Eingabe gibt es eine Ausgabe, wahr oder falsch.
 \subsubsection{Wieviele Probleme gibt es?}
 \begin{framed}
-    \newtheorem*{Goedel}{Gödel'scher Unvollständigkeitssatz}
+    \newtheorem{Goedel}{Gödel'scher Unvollständigkeitssatz}
     \begin{Goedel}
         In jedem widerspruchsfreien Axiomensystem gibt es Sätze, die nicht mit den Mitteln dieses Systems bewiesen werden können. (Kurt Gödel)
     \end{Goedel}
 \end{framed}
 \begin{framed}
-    \newtheorem*{MehrProbleme}{Satz}
+    \newtheorem{MehrProbleme}{Satz}
     \begin{MehrProbleme}
         Es gibt mehr Probleme als Algorithmen.
         \begin{proof}
@@ -352,7 +424,7 @@ $f: A* \rightarrow A*$ heißt turingberechenbar genau dann, wenn eine Turingmasc
     f(w_1)=w_2\Leftrightarrow \left[TM-z_0,w_1\right]\rightarrow \left[TM-z_1,w_2\right]
 \end{equation}
 \begin{framed}
-    \newtheorem*{Church}{Churche These}
+    \newtheorem{Church}{Churche These}
     \begin{Church}
         Jede im intuitiven Sinn berechenbare Funktion ist auch turingberechenbar.
     \end{Church}
@@ -372,7 +444,7 @@ Alle Kandidaten können aufgezählt werden.
 \end{itemize}
 \subsubsection{Unberechenbarkeit der Rad\'o-Funktion}
 \begin{framed}
-    \newtheorem*{rado}{Satz}
+    \newtheorem{rado}{Satz}
     \begin{rado}
         Die Funktion $\Sigma$ ist nicht berechenbar.
 
@@ -394,7 +466,7 @@ Alle Kandidaten können aufgezählt werden.
     \end{rado}
 \end{framed}
 \subsection{Satz von Rice}
-\newtheorem*{rice}{Satz von Rice}
+\newtheorem{rice}{Satz von Rice}
 \begin{framed}
     \begin{rice}
         Es gibt keinen Algorithmus, der in der Lage ist zu entscheiden, ob eine beliebige Turingmaschine (bzw. Funktion) eine nicht triviale Eigneschaft hat, oder nicht. 
@@ -456,7 +528,7 @@ Existiert ein Algorithmus \emph{zur Überprüfung einer potentiellen Lösung}, d
 $P \subseteq NP \Rightarrow P = NP\not\equiv P \subset NP$
 \paragraph*{Hamilton-Pfad/Kreis (HAM-P/K)}
 Existiert in einem gegebenen Graphen einen Pfad/Kreis, der jeden Knoten genau ein mal enthält (und dabei keine Kante doppelt verwendet)?
-\newtheorem*{hamiltonnp}{Satz}
+\newtheorem{hamiltonnp}{Satz}
 \begin{framed}
     \begin{hamiltonnp}
         Das Finden eines Hamilton-Kreises bzw. eines Hamilton-Pfades ist ein Problem aus NP. 
@@ -479,7 +551,7 @@ Entweder das funktioniert, dann ist $P = NP$, oder das funktioniert nicht, dann 
 \subsubsection{Definition}
 Menge aller Probleme aus $NP$, auf die alle Probleme aus $NP$ in $P$-Zeit zurückführbar sind.
 \begin{framed}
-    \newtheorem*{allenpc}{Merke}
+    \newtheorem{allenpc}{Merke}
     \begin{allenpc}
         Alle Probleme aus $NPC$ sind in $P$-Zeit aufeinander rückführbar und somit gleich schwer. 
     \end{allenpc}
