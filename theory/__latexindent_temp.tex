@@ -68,40 +68,6 @@
 
 \usepackage{listings}
 
-% Python style for highlighting
-\newcommand\pythonstyle{\lstset{
-language=Python,
-basicstyle=\ttm,
-otherkeywords={self},             % Add keywords here
-keywordstyle=\ttb\color{deepblue},
-emph={MyClass,__init__},          % Custom highlighting
-emphstyle=\ttb\color{deepred},    % Custom highlighting style
-stringstyle=\color{deepgreen},
-frame=tb,                         % Any extra options here
-showstringspaces=false            % 
-}}
-
-\lstset { %
-    language=C++,
-    backgroundcolor=\color{black!5}, % set backgroundcolor
-    basicstyle=\footnotesize\ttfamily,
-}
-
-% Python environment
-\lstnewenvironment{python}[1][]
-{
-\pythonstyle
-\lstset{#1}
-}
-{}
-
-% Python for external files
-\newcommand\pythonexternal[2][]{{
-\pythonstyle
-\lstinputlisting[#1]{#2}}}
-
-% Python for inline
-\newcommand\pythoninline[1]{{\pythonstyle\lstinline!#1!}}
 \usepackage{csquotes}
 \usepackage{framed}
 \linespread{1.2}
@@ -120,40 +86,180 @@ Eine Datenstruktur ist ein Objekt zur Speicherung und Organisation von Daten. Da
 \subsection{Stapel}
 \subsection{Listen}
 \subsection{Bäume}
+Ein Baum ist ein \textbf{zyklenfreier Graph} und kann als eine \textbf{rekursive Struktur} definiert werden. Dabei hat jeder Teilbaum einen \textbf{Schlüssel} an der Wurzel, hat \textbf{beliebig viele Kinder} und gehört genau einem Gesamtbaum an. Letztere Eigenschaft ist nicht zwingend notwendig, aber angebracht, wenn man z.B. das Niveau des Knotens bestimmen möchte.
+\begin{lstlisting}[language=Go]
+type Tree interface {
+  Root() Tree
+  Value() interface{}
+  Children() []Tree
+  Size() int
+}
+\end{lstlisting}
 \subsubsection{Grundbegriffe}
 \begin{description}
-    \item[Baum] Besteht aus Knoten und Kanten; Zyklenfreier Graph
     \item[Wurzel] Einziger Knoten im Baum, der keinen Vater hat
+    \item[Schlüssel] Wert, der in einem Knoten gespeichert ist. Häufig auch Markierung, Gewicht oder einfach nur Wert.
     \item[Kinder] Menge von Knoten aus Sicht von Knoten $k$, deren Vater $k$ ist  
+    \item[Vater] Genau der Knoten, der den Pointer zum aktuellen Knoten enthält. 
     \item[Höhe] Abstand zum am weitesten entfernten Blatt
     \item[Niveau] Abstand zur Wurzel  
     \item[Wald] Eine Menge an Bäumen 
 \end{description}
-\begin{lstlisting}
-# include <vector>
-
-struct Baum {
-    Knoten* Wurzel;
-};
-
-struct Knoten {
-    int Wert;              // Wert, den der Knoten speichert; muss nicht int sein     
-    Knoten* Vater;         // Pointer zu Vater
-    Knoten* Kinder;        // Array mit Pointern zu Kindern
-    int AnzahlKinder;      // Anzahl der Kinder im Array 
-    bool IstWurzel() {
-        return Vater == 0; // Null-Pointer
-    }
-    bool IstBlatt() {
-        return AnzahlKinder == 0;
-    }
-};
+\subsubsection{Traversierung}
+Eine Traversierung beschreibt das Ausgeben aller Schlüssel des Baumes in einer bestimmten Reihenfolge. Dabei gibt es die Modi \textbf{pre-order} und \textbf{post-order}, die bei allen Bäumen funktionieren sowie \textbf{in-order} und \textbf{out-of-order}, die nur für Binärbäume definiert sind.
+\paragraph{pre/post-order}
+Bei diesen Traversierungen wird der Schlüssel des aktuellen Knotens entweder bevor oder nachdem die Kinder traversiert wurden ausgegeben. 
+\begin{lstlisting}[language=Go]
+case POSTORDER:
+  for i := range traversals {
+      res = append(res, traversals[i]...)
+  }
+  res = append(res, t.Value())
+  break
+case PREORDER:
+  res = append(res, t.Value())
+  for i := range traversals {
+      res = append(res, traversals[i]...)
+  }
+  break
+}
+\end{lstlisting}
+\paragraph{in/out-of-order}
+Bei diesen Traversierungen wird der Schlüssel des aktuellen Knotens zwischen den Traversierungen der beiden Teilbäume ausgegeben. Dabei ändert sich lediglich die Reihenfolge der Traversierungen der Kinder. Wird erst das linke Kind traversiert, nennt man das in-order. Sonst handelt es sich um einen out-of-order-Durchlauf.
+\begin{lstlisting}[language=Go]
+case INORDER:
+  if len(traversals) == 2 {
+      res = append(res, traversals[0]...)
+      res = append(res, t.Value())
+      res = append(res, traversals[1]...)
+      break
+  }
+case OUTORDER:
+  if len(traversals) == 2 {
+      res = append(res, traversals[1]...)
+      res = append(res, t.Value())
+      res = append(res, traversals[0]...)
+      break
+  }   
 \end{lstlisting}
 \subsubsection{Binärbäume}
-Binärbäume sind spezielle Bäume, in denen jeder Knoten maximal zwei Kinder hat. Jeder Baum lässt sich als Binärbaum darstellen. (s. \emph{left most child})
+Binärbäume sind spezielle Bäume, in denen jeder Knoten maximal zwei Kinder hat. Jeder Baum lässt sich als Binärbaum darstellen. (s. \emph{left most child})\\
+Binärbäume sind häufig sinnvoll, weil sie als Suchbäume geeignet sind (s. unten), weil sie \textbf{speichereffizient} sind und weil Strukturen, wie z.B. die Operationsfolge mathematischer Terme, sich über solch eine Struktur darstellen lassen.
 \subsubsection{Suchbäume}
-\subsection{Warteschlangen}
+Suchbäume verwalten Paare von Schlüsseln und Werten so, dass möglichst effizient zu jedem Schlüssel der Wert gefunden werden kann. Dabei bleibt die Baumstruktur erhalten. Dabei gibt es verschiedene Ansätze dies umzusetzen. Meistens ist von \textbf{vergleichsbasierten Bäumen} die Rede. D.h. jeder Schlüssel kann mit jedem anderen Schlüssel verglichen werden, um die Reihenfolge festzustellen. Alternativen zu dieser Limitation sind Bäume, die Bitoperationen zulassen. (z.B. Van Emde Boas Bäume)
+\paragraph{Binäre Suchbäume (BST)}
+Die meisten Suchbäume sind binär. Dabei befinden sich genau \textbf{jene Schlüssel im linken Teilbaum, die kleiner sind als der Schlüssel der jeweiligen Wurzel}. Alle Teilbäume folgen diesem Prinzip. Somit kann in einem balancierten BST in $O(log(n))$ der Wert zu einem beliebigen Schlüssel gefunden werden. Dabei ist $n$ die Anzahl der Schlüssel im Baum. Ist der Baum nicht balanciert, ist ein linearer Durchlauf nötig und der Zeitaufwand ist folglich $O(n)$. Die \textbf{Worst-Case-Laufzeit} dieser \textbf{look-up}-Operation ist also stets \textbf{proportional zur Höhe} des Baumes.
+\paragraph{B-Bäume}
+Diese Art von Suchbaum \textbf{balanciert sich selbst}. Somit eignen sich B-Bäume gut, um große Datenmengen wie z.B. in \textbf{Datenbanken oder Dateisystemen} zu verwalten.\\
+Jeder Knoten in einem B-Baum kann beliebig viele Schlüssel enthalten. Abgesehen von der Wurzel wird die Anzahl der Schlüssel jedoch auf Grund des Wachstums des Baumes auf $b$ bis $2b$ beschränkt. Dabei ist $b$ ein beliebiger Wert, der im Voraus festgelegt wurde. Somit kann beim Hinzufügen des $2b+1$-ten Schlüssels der Knoten in zwei $b$-Knoten geteilt werden. Der übrige Schlüssel steigt dann zum jeweiligen Vater auf. Sollte der geteilte Knoten die Wurzel gewesen sein, hat die neue Wurzel nun einen einzigen Schlüssel.\\
+Die Operationen \textbf{look-up}, \textbf{insert} und \textbf{delete} verlaufen stets in $O(n)$-Zeit. Dabei muss jedoch bei einer geeigneten Implementation weniger Pointern gefolgt werden, weil die Höhe des Baumes gering gehalten wird.
+\paragraph{AVL-Bäume}
+Ein AVL-Baum ist ein BST, bei dem durch bestimmte Operationen, sogenannte Rotationen, die Balance aufrecht erhalten wird. Dabei hat jeder Knoten den Parameter $h$, der angibt, wie groß die Höhendifferenz der linken und rechten Teilbäume ist.\\
+Sollte der Betrag dieser Differenz an einem beliebigen Knoten betragsmäßig größer als $1$ werden, werden Operationen zum Ausgleich dieser Differenz genutzt. Somit bleibt ein AVL-Baum stets \textbf{streng balanciert}. Somit ist diese Datenstruktur für \textbf{Anwendungen} geeignet, wo sich der Baum \textbf{selten verändert}.\\
+Im wesentlichen gibt es zwei Operationen: die L-Rotation und die R-Rotation. Dabei werden die Knoten um eine Wurzel so verschoben, dass bei einer R-Rotation der Knoten links von der Wurzel ihren Platz einnimmt. Somit wird der Baum nach rechts gedreht und die Differenz um $2$ geändert. Hinundwieder sind Doppelrotationen notwendig, bei denen zwei entgegengesetzte Rotationen auf verschiedenen Wurzeln hintereinandner durchgeführt werden. Dies ist der Fall, wenn die Höhendifferenz nicht auf den äußeren Zweigen, sondern auf zweigen im Baum problematisch ist. Dann müssen die Knoten erst von innen nach außen gedreht werden, sodass anschließend eine normale Rotation das Problem löst.
+\paragraph{Rot-Schwarz-Bäume (RBT)}
+RSB sind AVL-Bäumen sehr ähnlich. Es handelt sich ebenfalls um binäre Suchbäume mit dem Ziel mit Hilfe von Baumrotationen nach bestimmten Regeln ein Gleichgewicht an allen Knoten zu erhalten. Dazu wird nun jedoch kein Gleichgewichtskoeffizient sondern die Färbung der Knoten genutzt. Dabei gibt es zwei Farben, meist Rot und Schwarz. Insgesamt bestehen folgende Regeln:
+\begin{enumerate}
+    \item Jeder Knoten hat genau eine der Farben Rot und Schwarz.
+    \item Die Wurzel ist immer Schwarz.
+    \item Alle Blätter sind Schwarz.
+    \item Wenn ein Knoten Rot ist, sind beide Kinder Schwarz.
+    \item Jeder Pfad von einem Knoten zu jedem seiner Blätter ist gleich lang. 
+\end{enumerate}
+Dabei ist zu beachten, dass in den Blättern niemals tatsächliche Werte stehen.\\
+Insgesamt sorgen diese Regel dafür, dass der längste Pfad in einem der beiden Teilbäume maximal doppelt so lang sein darf wie der längste Pfad im anderen Teilbaum.
+
+\subsection{Prioritätswarteschlangen (PQ)}
+Prioritätswarteschlangen sind \textbf{abstrakte Datenstrukturen}, die sich ähnlich verhalten wie normale Schlangen. Dabei wird jedoch das übliche FIFO-Prinzip aufgeweicht indem \textbf{jedem Element eine Priorität} zugewiesen wird. Das Element was nun bei jeder \textbf{pop}-Operation entfernt wird, ist jenes, welches die höchste Priorität hat. Sollten mehrere Elemente mit dieser Priorität existieren gilt weiterhin das FIFO-Prinzip.
+\subsubsection{Partiell geordnete Bäume (POT/Heap)}
+Meistens werden PQs über eine Form der Partiell geordneten Bäume implementiert. Dabei gilt in einem partiell georndeten Baum nur, dass \textbf{kein Knoten eine niedrigere Priorität haben darf als eines seiner Kinder}.\\
+Es gibt verschiedene Heaps, die für verschiedene Anwendungen entworfen wurden. Damit ergeben sich auch viele verschiedene Laufzeit- und Speicherkomplexitäten. Des Weiteren kann die Effizienz auf tatsächlicher Hardware je nach Implementation variieren.
+\subsubsection{Binäre Arraybasierte Heaps}
+Die wohl einfachste und speichereffizienteste Implementation eines Heaps ist ein arraybasierter binärer Heap. Hierbei wird auf die Verwendung von Pointern nahezu gänzlich verzichtet und stattdessen eine \textbf{lineare Anordnung aller Werte in einem Array} genutzt. Dabei folgen die einzelnen Ebenen des Heaps aufeinander. So lässt sich der Vater jedes Indizes mit der folgenden Funktion berechnen:
+\begin{lstlisting}[language=go]
+func parent(index int) int {
+    return (index - 1) >> 1
+}
+\end{lstlisting}
+Analog gilt für das Finden des rechten Kindes:
+\begin{lstlisting}[language=go]
+func right_child(index int) int {
+    return (index << 1) + 1
+}
+\end{lstlisting}
+In beiden fällen wurde die Multiplikation/Division mit zwei durch Shiftoperatoren ersetzt. Diese haben einen deutlichen Vorteil im bereich der Effizienz und werden deshalb bei den Implementationen in der Regel verwendet.\\
+Des Weiteren gibt es zwei wichtige Methoden, die ein Heap ausführen können muss. Diese dienen dazu, die \textbf{Heapeigenschaft} aus sicht eines Elementes \textbf{nach oben und nach unten} herzustellen. Folglich nennen wir diese Methoden \textbf{up} und \textbf{down}.\\
+Bei diesen Operationen wird das Element an dem bestimmten Index solange in die jeweilige Richtung verschoben, bis der Vater bzw. die Kinder nicht kleiner bzw. größer sind. Das Verschieben kann entweder über direktes tauschen geschehen oder durch einen Ringtausch optimiert werden. Bei letzterem Verfahren wird sich zu beginn der zu verschiebende Wert gemerkt und anschließend alle anderen Werte nachgerückt. Sobald nicht mehr weiter verschoben werden muss, kann der Wert wieder in das Array geschrieben werden.\\
+Wenn man nun ein Element in den Heap einfügt, wird die up-Methode benötigt. Das liegt daran, dass das Element an das Ende des Heaps, d.h. des Arrays, geschrieben wird und von dort nun die Heapeigenschaft hergestellt werden muss. Sollte das erste Element ausgegeben werden, wird genau umgekehrt vorgegangen. Das letzte Element im Array wird an die erste Stelle geschrieben und mit Hilfe der down-Methode kann auch in diesem Fall wieder ein valider Heap generiert werden.\\
+Einige Algorithmen (z.B Heapsort) erfordern es, aus einem bereits exisitierenden Array einen Heap zu generieren. Hierzu besteht natürlich immer die Möglichkeit, jedes Element einzeln in einen neuen Heap einzufügen. Diese Variante ist jedoch, je nach Implementation, eventuell weder speicher- noch laufzeiteffizient. Stattdessen wird auf alle Elemente beginnend bei der Hälfte des Arrays bis zur Wurzel nacheinander die down-Methode angewandt. Dass diese Operation funktioniert, hängt damit Zusammen, dass stets mindestens die Hälfte der Elemente Blätter sind und somit nicht mehr nach unten verschoben werden müssen. Es lässt sich zeigen, dass somit der Heap in $O(N\,log(N))$-Zeit initialisiert werden kann. Das ist die entscheidende Komponente in der Laufzeit des Heapsort-Algorithmus.
 \subsection{Graphen}
+Ein Graph ist ein Tupel der aus einer Menge von Knoten und einer Menge von Kanten, die diese Knoten miteinander verbinden. Dabei sind Markierungen Werte, die Knoten und vor allem Kanten haben können.
+\begin{align}
+    G &\:= (V,E) &\text{(Graph)}\\
+    V &\: \subset \mathbb{N} &\text{(endl. Knotenmenge)}\\
+    E &\:\subseteq V\times V &\text{(endl. Kantenmenge)}\  
+\end{align}
+Dabei hängt die Kantendefinition vom jeweiligen Problem ab. Einerseits gibt es gerichtete und ungerichtete Kanten, die sich darin unterscheiden, dass ungerichtete Kanten in beide Richtungen verlaufen. Andererseits kann es zwischen zwei Knoten mehr als eine Kante geben. Somit ist es möglich, dass $E >|V\times V|$.
+\subsubsection{Durchläufe}
+Graphen können nach verschiedenen Mustern durchlaufen werden. Dabei unterscheiden sich die einzelnen Möglichkeiten darin, nach welchen Kriterien Knoten die zu besuchen sind gewählt werden. Des Weiteren unterscheidet man zwischen einfachen Durchläufen, die jeden Knoten nur ein mal besuchen, und vollständigen Durchläufen, bei denen jeder Pfad durchlaufen wird, d.h. es wird nicht global gespeichert, welcher Knoten insgesamt schon besucht wurde.
+\paragraph{Tiefensuche (DFS)}
+Bei einer Tiefensuche werden die verfügbaren Folgeknoten in einem Stapel, das heißt nach dem LIFO-Prinzip verwaltet. Die Nachbarn des besuchten Knoten werden also auf einen Stapel gelegt und dann wird das oberste Element des Stapels besucht. Damit folgt, dass im Baum, den ein vollständiger Durchlauf ergeben würde, zunächst zu den Blättern gegangen wird, bevor Geschwister besucht werden.
+\begin{lstlisting}[language=go]
+func DFS(g Graph, start int) []int {
+    res := make([]int, 0, len(g.V()))
+    v := make([]bool, len(g.V()))
+    s := stack.New()
+    for c := start; !s.IsEmpty(); c = s.Get() {
+        res = append(res, c)
+        v[c] = true
+        n := Neighbours(g, c)
+        for i := range n {
+            if !v[n[i]] {
+                s.Put(n[i])
+            }
+        }
+    }
+    return res
+}
+\end{lstlisting}
+\paragraph{Breitensuche (BFS)}
+Eine Breitensuche ist genau das gleiche wie eine Tiefensuche mit dem einzigen Unterschied, dass nun das FIFO-Prinzip gilt, also eine Schlange an Stelle des Stapels verwendet wird. Es werden somit alle Knoten in aufsteigender Entfernung in Kanten hinzugefügt.
+\begin{lstlisting}[language=go]
+func DFS(g Graph, start int) []int {
+    res := make([]int, 0, len(g.V()))
+    v := make([]bool, len(g.V()))
+    q := queue.New()
+    for c := start; !s.IsEmpty(); c = q.Get() {
+        res = append(res, c)
+        v[c] = true
+        n := Neighbours(g, c)
+        for i := range n {
+            if !v[n[i]] {
+                q.Put(n[i])
+            }
+        }
+    }
+    return res
+}
+\end{lstlisting}
+\subsubsection{Pfade}
+Ein Pfad ist je nach Definition entweder eine \textbf{Folge aufeinanderfolgender Knoten oder} eine Folge aufeinanderfolgender \textbf{Kanten}. Dabei wird ein Pfad als \textbf{Kreis} bezeichnet, wenn er \textbf{an jenem Knoten endet, wo er beginnt.} Weiterhin haben Pfad ein Gewicht, welches sich aus der Summe der Kantengewichte ergibt. 
+\paragraph{Dijkstra}
+Dijkstras Algorithmus versucht möglichst effizient in einem unbekannten Graphen den kürzesten Pfad zwischen zwei Punkten zu finden. Dabei bezieht sich die Länge des Pfades natürlich auf das Gewicht. Dabei betrachtet der Algorithmus im schlechtesten Fall jede potentielle Gerichtete Kante genau ein mal. D.h. die Zeitkomplexität ist $O(|V|^2)$.\\
+Der Algorithmus lautet wiefolgt:
+\begin{enumerate}
+    \item Markiere alle Knoten als unbesucht und setze ihre Entfernungen auf unendlich.
+    \item Besuche den Startknoten und setze seine Entfernung auf null.
+    \item Setze die Entfernung aller Nachbarn auf die Entfernung des aktuellen Knoten plus die Länge der dazugehörigen Kante insofern nicht bereits eine niedrigere Entfernung angegeben ist.
+    \item Besuche den nächsten unbesuchten Knoten mit der geringsten Entfernung vom Startknoten.
+    \item Wenn dieser Knoten nicht der Zielknoten ist, gehe zu 3.
+    \item Gib die Entfernung des Zielknotens aus.
+\end{enumerate}
+\paragraph{A*}
+\subsubsection{Spannbäume}
+\paragraph{Prim}
+\paragraph{Kruskal}
+\subsubsection{Zusammenhang}
 \section{Technische Grundlagen}
 \subsection{Grundbegriffe}
 Bool'sche Algebra, Schaltalgebra, Aussage, Atome, Junktoren, Zweiwertigkeit, Extensionabilität, Kontraposition, Kettenschluss, DeMorgan'sche Regeln, Wahrheitstabellen
@@ -177,8 +283,11 @@ Automaten lassen sich grundsätzlich in zwei Arten unterteilen:
 \begin{align}
     A &\:=(X, Z, z_0, \delta, F) &\text{(Akzeptor)}\\
     T &\:=(X, Y, Z, z_0, \delta, \gamma)&\text{(Transduktor)}
-    \end{align}
-    \begin{align}
+\end{align}
+Dabei können Transduktoren basierend auf Zustandsübergängen Ausgaben tätigen und Akzeptoren in akzeptierende Zustände übergehen.
+\subsubsection {Endliche Automaten (EA)}
+Insbesondere gilt bei endlichen Automaten:
+\begin{align}
     X &\:\subset \mathbb{N} &\text{(endl. Eingabealphabet)}\\
     Y &\:\subset \mathbb{N} &\text{(endl. Ausgabealphabet)}\\
     Z &\:\subset \mathbb{N} &\text{(endl. Zustandmenge)}\\
@@ -187,10 +296,12 @@ Automaten lassen sich grundsätzlich in zwei Arten unterteilen:
     \gamma &\:: Z \times X \rightarrow Y &\text{(Ausgabefunktion)}\\
     F &\:\subseteq Z &\text{(Menge akzeptierender Zustände)}
 \end{align}
-\subsubsection {Endliche Automaten (EA)}
 \subsubsection{Kellerautomaten (PDA)}
+Kellerautomaten unterscheiden sich an einer wesentlichen Stelle: Statt eines einzigen Zeichens eines endlichen Alphabetes, dem aktuellen Zustand, können Kellerautomaten nun undendlich viele solche Zeichen schreiben. Jene Werte werden auf einem Stapel bzw. einem Kellerspeicher gespeichert. D.h. es kann immer nur auf das letzte geschriebene Zeichen zugegriffen werden. Hinzu kommt außerdem die Entscheidung, ob der Automat in einem Schritt ein Zeichen auf den Stapel schreibt oder eines entfernt.
 \subsubsection{Linear beschränkte Automaten (LBA)}
+
 \subsubsection{Turingmaschinen (TM)}
+\subsubsection{Registermaschinen (RM)}
 \subsection{Sprachen}
 Grammatiken beschreiben Sprachen und es ist möglich Grammatiken nach der Chomsky-Hierarchie zu unterteilen.\\
 \begin{tabular}{l | l | l}
@@ -237,7 +348,7 @@ Menge $M$ aus $A*$ heißt rekursiv aufzählbar, genau dann wenn
     |M|=0 \vee f:\mathbb{N}\rightarrow A* \wedge M=\{f(0), f(1),...\}
 \end{equation}
 Dabei muss $f$ total und berechenbar sein.\\
-\newtheorem*{RaSe}{Satz}
+\newtheorem{RaSe}{Satz}
 \begin{framed}
     \begin{RaSe}
         $M$ ist semi-entscheidbar genau dann, wenn $M$ rekursiv aufzählbar ist.
@@ -265,7 +376,7 @@ Dabei muss $f$ total und berechenbar sein.\\
     Typ-0-Sprache               & nicht allg. entscheidbar
 \end{tabular}
 \begin{framed}
-\newtheorem*{Typ-1-Entscheidbarkeit}{Satz}
+\newtheorem{Typ-1-Entscheidbarkeit}{Satz}
 \begin{Typ-1-Entscheidbarkeit}
 Typ-1-Sprachen sind entscheidbar.
 \begin{proof}
@@ -289,13 +400,13 @@ Eine $n$-stellige Wortfunktion:
 F\"ur eine $n$-stellige Eingabe gibt es eine Ausgabe, wahr oder falsch.
 \subsubsection{Wieviele Probleme gibt es?}
 \begin{framed}
-    \newtheorem*{Goedel}{Gödel'scher Unvollständigkeitssatz}
+    \newtheorem{Goedel}{Gödel'scher Unvollständigkeitssatz}
     \begin{Goedel}
         In jedem widerspruchsfreien Axiomensystem gibt es Sätze, die nicht mit den Mitteln dieses Systems bewiesen werden können. (Kurt Gödel)
     \end{Goedel}
 \end{framed}
 \begin{framed}
-    \newtheorem*{MehrProbleme}{Satz}
+    \newtheorem{MehrProbleme}{Satz}
     \begin{MehrProbleme}
         Es gibt mehr Probleme als Algorithmen.
         \begin{proof}
@@ -312,7 +423,7 @@ $f: A* \rightarrow A*$ heißt turingberechenbar genau dann, wenn eine Turingmasc
     f(w_1)=w_2\Leftrightarrow \left[TM-z_0,w_1\right]\rightarrow \left[TM-z_1,w_2\right]
 \end{equation}
 \begin{framed}
-    \newtheorem*{Church}{Churche These}
+    \newtheorem{Church}{Churche These}
     \begin{Church}
         Jede im intuitiven Sinn berechenbare Funktion ist auch turingberechenbar.
     \end{Church}
@@ -332,7 +443,7 @@ Alle Kandidaten können aufgezählt werden.
 \end{itemize}
 \subsubsection{Unberechenbarkeit der Rad\'o-Funktion}
 \begin{framed}
-    \newtheorem*{rado}{Satz}
+    \newtheorem{rado}{Satz}
     \begin{rado}
         Die Funktion $\Sigma$ ist nicht berechenbar.
 
@@ -354,7 +465,7 @@ Alle Kandidaten können aufgezählt werden.
     \end{rado}
 \end{framed}
 \subsection{Satz von Rice}
-\newtheorem*{rice}{Satz von Rice}
+\newtheorem{rice}{Satz von Rice}
 \begin{framed}
     \begin{rice}
         Es gibt keinen Algorithmus, der in der Lage ist zu entscheiden, ob eine beliebige Turingmaschine (bzw. Funktion) eine nicht triviale Eigneschaft hat, oder nicht. 
@@ -416,7 +527,7 @@ Existiert ein Algorithmus \emph{zur Überprüfung einer potentiellen Lösung}, d
 $P \subseteq NP \Rightarrow P = NP\not\equiv P \subset NP$
 \paragraph*{Hamilton-Pfad/Kreis (HAM-P/K)}
 Existiert in einem gegebenen Graphen einen Pfad/Kreis, der jeden Knoten genau ein mal enthält (und dabei keine Kante doppelt verwendet)?
-\newtheorem*{hamiltonnp}{Satz}
+\newtheorem{hamiltonnp}{Satz}
 \begin{framed}
     \begin{hamiltonnp}
         Das Finden eines Hamilton-Kreises bzw. eines Hamilton-Pfades ist ein Problem aus NP. 
@@ -439,7 +550,7 @@ Entweder das funktioniert, dann ist $P = NP$, oder das funktioniert nicht, dann 
 \subsubsection{Definition}
 Menge aller Probleme aus $NP$, auf die alle Probleme aus $NP$ in $P$-Zeit zurückführbar sind.
 \begin{framed}
-    \newtheorem*{allenpc}{Merke}
+    \newtheorem{allenpc}{Merke}
     \begin{allenpc}
         Alle Probleme aus $NPC$ sind in $P$-Zeit aufeinander rückführbar und somit gleich schwer. 
     \end{allenpc}

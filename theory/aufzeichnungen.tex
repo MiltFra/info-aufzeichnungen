@@ -255,12 +255,47 @@ Der Algorithmus lautet wiefolgt:
     \item Wenn dieser Knoten nicht der Zielknoten ist, gehe zu 3.
     \item Gib die Entfernung des Zielknotens aus.
 \end{enumerate}
+Bei der Implementation sollte man die unbesuchten Knoten in einer Prioritätswarteschlange verwalten. Dabei gilt es zu beachten, dass sich die Prioritäten ändern können, wenn sich neue Entfernungen ergeben. Das bedeutet der Vergleichswert der Elemente der Warteschlange ändert sich nachdem sie eingefügt wurden.\\
+Der Algorithmus funktioniert, weil in dem Moment, wo ein Knoten besucht wird, kein weniger entfernter unbesuchter Knoten im gesamten Grapehn existiert. D.h. insofern es keine negativen Kantengewichte gibt, kann kein Pfad über einen unbesuchten Knoten zu dem nun gewählten Knoten kürzer werden.
 \paragraph{A*}
+Auch A*-Algorithmen (gesprochen: A-Stern) zielen darauf ab den kürzesten Weg in einem Graphen zu finden. Der wesentliche Unterschied ist jedoch, dass einerseits nicht die Knoten sondern potentielle Pfade in einer Prioritätswarteschlange verwaltet werden.
+Der Algorithmus mit der Heuristik $H(X)$ funktioniert nun wiefolgt:
+\begin{enumerate}
+    \item Füge den Pfad, der nur den Startknoten enthält, in eine neue PQ.
+    \item Nimm den Pfad mit der kürzesten maximalen Pfadlänge aus der PQ.
+    \item Wenn es keinen solchen Pfad gibt, gib aus, dass kein Pfad zwischen den gewünschten Knoten existiert.
+    \item Wenn der Pfad am Zielknoten endet, gib diesen Pfad aus.
+    \item Berechne für alle im aktuellen Pfad noch nicht vorhandenen Nachbarn die erweiterten Pfade hinzu und berechne die maximale Pfadlänge aus den bisher gewählten Kanten und $H(X)$.
+    \item Lege die neuen Pfade auf die PQ.
+    \item Gehe zu 2.
+\end{enumerate}
+Heuristiken basieren meistens darauf, dass man genauere Informationen über einen Graphen hat. Wenn man beispielsweise weiß, dass es sich bei den Knoten um Punkte in einer Ebene handelt und deren Koordinaten bekannt sind, kann der direkte, hindernisfreie Abstand zum Zielknoten als Heuristik verwendet werden.
 \subsubsection{Spannbäume}
+Spannbäume sind Bäume, d.h. kreisfreie Graphen, die \textbf{alle Konten eines Graphen enthalten}. Jeder Spannbaum eines Graphen ist \textbf{ein Teilgraph}.\\
+Einfache Spannbäume können über einfache Breiten- und Tiefensuchen gefunden werden. Meistens ist man jedoch interessiert daran minimale Spannbäume zu finden. Anwendungen solcher Algorithmen sind einerseits \textbf{Telefon- und Rechnernetze}, bei denen Redundanz verhindert werden soll, und andererseits \textbf{Heurisitiken}, wie z.B. die MST-Heursitik des TSP.
 \paragraph{Prim}
+Der Algorithmus von Prim arbeitet ähnlich wie Dijkstra. Dabei wird jedoch nicht der Abstand von einem bestimmten Startknoten sondern lediglich die unmittelbare Kantenlänge, d.h. der Abstand vom Gerüst betrachtet.
+\begin{enumerate}
+    \item Setze die Entfernungen aller Knoten auf undendlich.
+    \item Fügen den Startknoten dem Spannbaum hinzu und setze seine Entfernung auf null.
+    \item Setze die Entfernung aller Nachbarn auf die Entfernung zum aktuellen Knoten und markiere die jeweilige Kante als notwendig insofern nicht bereits eine niedrigere Entfernung angegeben ist.
+    \item Füge den nächsten unbesuchten Knoten und die dazugehörige Kante mit der geringsten Entfernung vom Gerüst dem Spannbaum hinzu. 
+    \item Wenn noch nicht alle Knoten im Spannbaum enthalten sind, gehe zu 3.
+    \item Gib den Spannbaum aus.
+\end{enumerate}
+Die Laufzeit beträgt $O(|E|+|V|log(|V|))$.
 \paragraph{Kruskal}
+Ein weiterer Algorithmus, der minimale Spannbäume ermittelt, ist Kruskals Algorithmus. Dabei wird im Gegensatz zu Prims Algorithmus nicht ein großer Spannbaum durch das hinzufügen einzelner Kanten erstellt sondern durch das Zusammenfügen mehrerer kleinerer Teilgraphen. Der Algorithmus lautet für den Graphen $G=(V,E)$ wiefolgt:
+\begin{enumerate}
+    \item Erstelle einen neuen Graphen $G'=(V, E')$ mit den Knoten V und ohne Kanten.
+    \item Sortiere $E$ mit aufsteigender Länge in $L$.
+    \item Wähle die kleinste Kante $e$ aus $L$ und entferne sie.
+    \item Wenn $e$ mit $E'$ keine Kreise erzeugt füge $e$ in $E'$ ein.
+    \item Gib $G'$ zurück.
+\end{enumerate}
+Der Algorithmus ist zwar relativ leicht verständlich, aber relativ schwer zu implementieren. Benötigt wird eine effiziente Methode, um den aktuellen Graphen auf Kreisfreiheit zu prüfen. Hierzu ist es empfehlenswert Mengen zu impelentieren, die sich einerseits leicht addieren lassen und andererseits eine effiziente Möglichkeit zur Verfügung stellen, zu überprüfen, ob ein Element in der Menge enthalten ist. Je nach Größe des Graphen können sich hier bool'sche Arrays, Hashtabellen oder Suchbäume eignen.\\
+Wenn solche Mengen zur Verfügung stehen, können bereits mit einer Kante verbundene Knoten derart verwaltet werden, dass alle Knoten, zwischen denen eine Verbindung besteht, in der gleichen Menge sind. Wenn entschieden werden soll, ob eine Kante die Kreisfreiheit des Graphen gefährdet, kann einfach überprüft werden, ob eine Menge beide Enden, d.h. Knoten, der Kante enthält. Wenn das nicht so ist, wird entweder eine neue Menge erstellt, die die beiden Enden enthält, oder ein Ende wird der Menge hinzugefügt, die das andere Ende enthält, oder die Mengen der beiden Enden werden addiert.
 \subsubsection{Zusammenhang}
-
 \section{Technische Grundlagen}
 \subsection{Grundbegriffe}
 Bool'sche Algebra, Schaltalgebra, Aussage, Atome, Junktoren, Zweiwertigkeit, Extensionabilität, Kontraposition, Kettenschluss, DeMorgan'sche Regeln, Wahrheitstabellen
