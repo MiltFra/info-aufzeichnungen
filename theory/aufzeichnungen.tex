@@ -82,9 +82,60 @@
 \section{Datenbanken}
 \section{Datenstrukturen}
 Eine Datenstruktur ist ein Objekt zur Speicherung und Organisation von Daten. Dabei sind Daten immer so angeordnent, dass sie effizient, in Bezug auf Zeit und Speicher, für eine bestimmte Aufgabe genutzt werden können.
+\subsection{Arrays}
+Arrays sind die einfachste Datenstruktur. Sie beschreiben eine geordnete Menge von Elementen, die durch Indizes abgerufen werden können. Dabei lässt sich die Position des Elements im Speicher aus dem Index berechnen.\\
+Arrays an sich sind zwar keine komplizierten Datenstrukturen, aber es gibt einige Algorithmen, die in Verbindung mit Arrays notwendig sind.
+\subsubsection{Binäre Suche}
+Wenn es darum geht ein Element in einem Array zu finden, gibt es den naiven Ansatz, der jedes Element durchläuft. Dieser Ansatz ist notwendig, wenn nicht mehr über das Array bekannt ist. Aus diesem Grund gibt es bessere Datenstrukturen zur Verwaltung von Mengen und Abbildungen. (s. Suchbäume, Hash-Tabellen)\\
+Wenn man jedoch über ein sortiertes Array verfügt, werden weitere Optionen ersichtlich. Ein sehr effektiver Ansatz, der die Zeitkomplexität der Suche von $O(N)$ auf $O(log(N))$ reduziert ist die binäre Suche. Der Algorithmus lautet wiefolgt:
+\begin{enumerate}
+    \item $a$ sei $0$ und $b$ der Index des letzten Elementes des Arrays.
+    \item Wenn das Element des Arrays in der Mitte von $a$ und $b$ ($a + b\: div\: 2$), $e$, gleich dem gesuchten Element $g$ ist, kann der Index von $e$ zurückgegeben werden.
+    \item Wenn $e$ kleiner als $g$ ist, setze $a=e$.
+    \item Sonst setze $b=e$.
+    \item Wenn $a$ und $b$ gleich sind, gib zurück, dass das gesuchte Element nicht existiert.
+\end{enumerate}
 \subsection{Schlangen}
+Schlangen sind eine sehr einfache Datenstruktur. Sie sind durch die Operationen \textbf{PopFront}, also das Entfernen des ersten Elementes, und \textbf{PushBack}, das Anhängen eines Elementes, definiert. Des Weiteren wird häufig die \textbf{Peek}-Methode implementiert, die zwar den ersten Wert der Schlange zurückgibt, aber nicht das dazugehörige Element entfernt.\\
+In einer Schlange gilt das \textbf{FIFO}-Prinzip (engl. \emph{first in first out}). Das bedeutet die Elemente werden in der Reihenfolge ausgegeben, wie sie an die Schlange angehängt wurden.
+\begin{lstlisting}[language=go]
+type Queue interface {
+    PopFront() interface{}
+    PushBack(interface{})
+    Peek() interface{}
+    IsEmpty() bool
+}
+\end{lstlisting}
+Eine pointerbasierte Schlange (\emph{linked queue}) muss also einen Pointer zum ersten und zum letzten Element der Schlange speichern. Außerdem muss jedes Element seinen Nachfolger, also das Element was unmittelbar nach ihm angehängt wurde, kennen. Damit erfolgen pop, append und peek in $O(1)$.
 \subsection{Stapel}
+Stapel sind ähnlich komplex wie Schlangen. An Stelle der \textbf{PushBack}-Methode wird hier jedoch die \textbf{PushFront}-Methode verwendet. Diese hängt ein Element nicht an das Ende der Verkettung, sondern an den Anfang. Somit müssen sich auch die Richtungen der Pointer in den Elementen ändern. Wenn man Pointer für die Implementation nutzt, muss also jedes Element nicht mehr seinen Vorgänger kennen, sondern seinen Nachfolger. Damit wird aus dem \emph{first in, first out} ein \emph{last in, first out}. Es gilt also das \textbf{LIFO}-Prinzip.
+\begin{lstlisting}[language=go]
+type Stack interface {
+    PopFront() interface{}
+    PushFront(interface{})
+    Peek() interface{}
+    IsEmpty() bool
+}
+\end{lstlisting}
+Im Gegensatz zu Schlangen sind Stapel jedoch extrem einfach basierend auf einem Array zu implementieren. So wird lediglich der Index des aktuellen obersten Elementes sowie ein ausreichend großes Array, welches bei Bedarf erweitert werden kann, benötigt. Nun kann beim Einfügen jener Index inkrementiert und das Element an die jeweilige Stelle geschrieben werden. Das Entfernen ist noch einfacher, weil einfach der Index dekrementiert werden muss.
 \subsection{Listen}
+Listen sind nun die Fusion aus zwei Stapeln, einem vorwärts und einem rückwärts. D.h. die Push und Pop Operationen sind sowohl für den Anfang als auch für das Ende der Kette definiert. Hinzu kommt die Operation, Elemente vom Ende der Schlange zu nehmen. Es gibt viele Implementationen die meistens entweder auf Pointern und einzelnen Elementen basieren (\emph{linked lists}) oder sich ein oder mehrere Arrays zu Nutze machen. (z.B. \texttt{std::vector} in C++)
+\begin{lstlisting}[language=go]
+type List interface {
+    PopFront() interface{}
+    PopBack() interface{}
+    PushFront(interface{}) 
+    PushBack(interface{}) 
+}
+\end{lstlisting}
+Die meisten Listen, die implementiert werden, sind \emph{geordnet}. Das bedeutet Elemente haben einen Index. Nach der bisherigen Definition kann nur auf das erste und das letzte Element zugegriffen werden. Nun gibt es Operationen an jeder Stelle der Liste.
+\begin{lstlisting}[language=go]
+type OrderedList interface {
+    List
+    Pop(int) interface{}
+    Push(interface{}, int)
+}
+\end{lstlisting}
 \subsection{Bäume}
 Ein Baum ist ein \textbf{zyklenfreier Graph} und kann als eine \textbf{rekursive Struktur} definiert werden. Dabei hat jeder Teilbaum einen \textbf{Schlüssel} an der Wurzel, hat \textbf{beliebig viele Kinder} und gehört genau einem Gesamtbaum an. Letztere Eigenschaft ist nicht zwingend notwendig, aber angebracht, wenn man z.B. das Niveau des Knotens bestimmen möchte.
 \begin{lstlisting}[language=Go]
@@ -269,7 +320,7 @@ Der Algorithmus mit der Heuristik $H(X)$ funktioniert nun wiefolgt:
     \item Lege die neuen Pfade auf die PQ.
     \item Gehe zu 2.
 \end{enumerate}
-Heuristiken basieren meistens darauf, dass man genauere Informationen über einen Graphen hat. Wenn man beispielsweise weiß, dass es sich bei den Knoten um Punkte in einer Ebene handelt und deren Koordinaten bekannt sind, kann der direkte, hindernisfreie Abstand zum Zielknoten als Heuristik verwendet werden.
+Heuristiken basieren meistens darauf, dass man genauere Informationen über einen Graphen hat, die genutzt werden können, um abzuschätzen, wie gut ein gewählter Pfad ist. Wenn man beispielsweise weiß, dass es sich bei den Knoten um Punkte in einer Ebene handelt und deren Koordinaten bekannt sind, kann der direkte, hindernisfreie Abstand zum Zielknoten als Heuristik verwendet werden.
 \subsubsection{Spannbäume}
 Spannbäume sind Bäume, d.h. kreisfreie Graphen, die \textbf{alle Konten eines Graphen enthalten}. Jeder Spannbaum eines Graphen ist \textbf{ein Teilgraph}.\\
 Einfache Spannbäume können über einfache Breiten- und Tiefensuchen gefunden werden. Meistens ist man jedoch interessiert daran minimale Spannbäume zu finden. Anwendungen solcher Algorithmen sind einerseits \textbf{Telefon- und Rechnernetze}, bei denen Redundanz verhindert werden soll, und andererseits \textbf{Heurisitiken}, wie z.B. die MST-Heursitik des TSP.
