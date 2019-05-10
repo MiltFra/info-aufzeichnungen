@@ -95,6 +95,26 @@ Wenn man jedoch über ein sortiertes Array verfügt, werden weitere Optionen ers
     \item Sonst setze $b=e$.
     \item Wenn $a$ und $b$ gleich sind, gib zurück, dass das gesuchte Element nicht existiert.
 \end{enumerate}
+Dieses Verfahren könnte leicht modifiziert werden, sodass das nächst kleinere Element ausgegeben wird.
+\subsubsection{Sortierverfahren}
+Sortierverfahren oder Sortieralgorithmen zielen darauf ab, ein Array vergleichbarer Werte möglichst schnell so anzuordnen, dass sie entweder aufsteigend oder absteigend sortiert sind. 
+\paragraph{Bubblesort}
+Das wohl einfachste Sortierverfahren ist Bubblesort. 
+\paragraph{Insertsort}
+\paragraph{Selectionsort}
+\paragraph{Mergesort}
+\paragraph{Quicksort}
+Quicksort hat einen ähnlichen Divide-and-Conquer Ansatz wie Mergesort. 
+\begin{enumerate}
+    \item Wenn das Array die Länge 1 hat, ist das Array sortiert.
+    \item Gewählt wird ein beliebiger Wert $v$ aus dem Array.
+    \item Alle Werte die kleiner sind als $v$ werden auf die linke Seite verschoben und alle anderen Werte auf die rechte Seite.
+    \item Nun beginne man erneut bei 1. und interpretiere die beiden Seiten je als ein Array.
+\end{enumerate}
+Natürlich ist der worst-case dieses Algorithmus ziemlich schlecht, $O(N^2)$ um genau zu sein. In den meisten Fällen liegt die Laufzeitkomplexität jedoch bei $O(N\,log(N))$.
+\paragraph{Heapsort}
+Wenn man sich die Datenstruktur Heap angesehen hat, ist klar, wie Heapsort funktioniert. Das Array wird in einen Heap konvertiert und dann werden die Elemente nacheinander entfernt vom Ende beginnend in das Array geschrieben.\\
+Das initialisieren eines Heaps erfolgt in $O(N)$-Zeit, das Ausgeben bedarf in jedem Schritt $O(log(N))$-Zeit. Da es $N$ Iterationen gibt, terminiert auch der Heapsort-Algorithmus in $O(N\,log(N))$-Zeit.
 \subsection{Schlangen}
 Schlangen sind eine sehr einfache Datenstruktur. Sie sind durch die Operationen \textbf{PopFront}, also das Entfernen des ersten Elementes, und \textbf{PushBack}, das Anhängen eines Elementes, definiert. Des Weiteren wird häufig die \textbf{Peek}-Methode implementiert, die zwar den ersten Wert der Schlange zurückgibt, aber nicht das dazugehörige Element entfernt.\\
 In einer Schlange gilt das \textbf{FIFO}-Prinzip (engl. \emph{first in first out}). Das bedeutet die Elemente werden in der Reihenfolge ausgegeben, wie sie an die Schlange angehängt wurden.
